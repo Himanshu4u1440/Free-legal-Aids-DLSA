@@ -1,0 +1,532 @@
+{% extends "base.html" %}
+
+{% block title %}DLSA Management - Legal Aid Camps & Judicial Schedules{% endblock %}
+
+{% block content %}
+<div class="bg-navy text-white py-3" style="background: #0f2b48;">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h4 class="fw-bold mb-0"><i class="bi bi-calendar-event me-2 text-warning"></i>Legal Literacy Camps & Events Management</h4>
+            <small class="text-white-50">Schedule public awareness camps, Lok Adalats, matters covered, and assign PLV duties</small>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-2 mt-md-0">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+            <a href="{{ url_for('admin_plvs') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-people me-1"></i>Manage PLVs</a>
+            <a href="{{ url_for('admin_deployments') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-geo-alt me-1"></i>Manage Places</a>
+            <a href="{{ url_for('admin_leadership') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-diagram-3 me-1"></i>Manage Ranks</a>
+            <a href="{{ url_for('admin_camps') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-calendar2-week me-1"></i>Manage Camps</a>
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-sm btn-danger"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Top Summary Metrics Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white border-start border-primary border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Total Schedules</div>
+                        <h3 class="fw-bold text-navy mb-0">{{ events|length }}</h3>
+                    </div>
+                    <div class="bg-primary text-white p-3 rounded-circle">
+                        <i class="bi bi-calendar-week fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white border-start border-success border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Upcoming / Active</div>
+                        <h3 class="fw-bold text-success mb-0">{{ upcoming_events|length }}</h3>
+                    </div>
+                    <div class="bg-success text-white p-3 rounded-circle">
+                        <i class="bi bi-calendar-check fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white border-start border-warning border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Available PLVs</div>
+                        <h3 class="fw-bold text-warning mb-0">{{ plvs|length }}</h3>
+                    </div>
+                    <div class="bg-warning text-dark p-3 rounded-circle">
+                        <i class="bi bi-person-badge fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white border-start border-info border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Completed / Past</div>
+                        <h3 class="fw-bold text-secondary mb-0">{{ past_events|length }}</h3>
+                    </div>
+                    <div class="bg-info text-white p-3 rounded-circle">
+                        <i class="bi bi-check2-circle fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Bar -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <h5 class="fw-bold text-navy mb-0"><i class="bi bi-megaphone me-2 text-primary"></i>Scheduled Legal Literacy Camps & Lok Adalat Sessions</h5>
+                <small class="text-muted">Changes here are automatically published to the public "Porbandar Judicial Schedules" section.</small>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#addCampModal">
+                    <i class="bi bi-plus-circle me-1"></i>Schedule New Camp / Event
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camps List Tabs -->
+    <ul class="nav nav-pills mb-3" id="campTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-semibold" id="upcoming-tab" data-bs-toggle="pill" data-bs-target="#upcoming-pane" type="button" role="tab">
+                <i class="bi bi-calendar-check me-1 text-success"></i>Upcoming & Active Camps ({{ upcoming_events|length }})
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-semibold" id="all-tab" data-bs-toggle="pill" data-bs-target="#all-pane" type="button" role="tab">
+                <i class="bi bi-collection me-1"></i>All Events & Archive ({{ events|length }})
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="campTabsContent">
+        <!-- Upcoming Camps Pane -->
+        <div class="tab-pane fade show active" id="upcoming-pane" role="tabpanel">
+            {% if upcoming_events %}
+            <div class="row g-4">
+                {% for event in upcoming_events %}
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white" style="border-radius: 20px !important;">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge {% if 'Lok Adalat' in event.event_type %}bg-primary{% else %}bg-warning text-dark{% endif %} px-3 py-1 fw-bold">
+                                {{ event.event_type }}
+                            </span>
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="badge bg-navy text-white">
+                                    <i class="bi bi-calendar-event me-1"></i>{{ event.event_date.strftime('%d %b %Y') }}
+                                </span>
+                                {% if event.is_active %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Archived</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <h4 class="fw-bold text-navy mb-2">{{ event.title }}</h4>
+
+                        <div class="small mb-3">
+                            <div class="text-muted mb-1">
+                                <i class="bi bi-geo-alt-fill text-danger me-1"></i><strong>Place / Venue:</strong> {{ event.venue }}
+                            </div>
+                            <div class="text-muted mb-1">
+                                <i class="bi bi-clock-fill text-primary me-1"></i><strong>Schedule:</strong> {{ event.time_schedule }}
+                            </div>
+                            {% if event.presiding_officers %}
+                            <div class="text-muted mb-1">
+                                <i class="bi bi-award-fill text-warning me-1"></i><strong>Officers / Mediators:</strong> {{ event.presiding_officers }}
+                            </div>
+                            {% endif %}
+                            <div class="text-secondary mt-2">
+                                <i class="bi bi-journal-text text-info me-1"></i><strong>Matters to be Covered:</strong>
+                                <p class="mb-0 text-dark small bg-light p-2 rounded-2 mt-1">{{ event.eligible_matters }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Duty Assigned PLVs -->
+                        <div class="p-3 bg-light rounded-3 border-0 mt-auto mb-3" style="background-color: #f1f5f9 !important;">
+                            <div class="d-flex align-items-center text-primary fw-bold small mb-1">
+                                <i class="bi bi-person-badge-fill me-1"></i>Assigned Duty PLVs (Para Legal Volunteers):
+                            </div>
+                            <div class="small text-dark">
+                                {% if event.assigned_plvs %}
+                                    {{ event.assigned_plvs }}
+                                {% else %}
+                                    <span class="text-muted fst-italic">No specific PLVs assigned yet. Click 'Edit Duties' to allocate volunteers.</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top small text-muted">
+                            <div><i class="bi bi-person-lines-fill me-1 text-secondary"></i>{{ event.contact_person or "DLSA Porbandar" }}</div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editCampModal{{ event.id }}">
+                                    <i class="bi bi-pencil me-1"></i>Edit / Assign Duties
+                                </button>
+                                <form method="POST" action="{{ url_for('admin_toggle_camp_status', event_id=event.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary" title="Toggle status">
+                                        <i class="bi bi-check-circle"></i>
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('admin_delete_camp', event_id=event.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this camp / schedule?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="card border-0 shadow-sm p-5 text-center bg-white rounded-4">
+                <i class="bi bi-calendar-x fs-1 text-muted mb-3"></i>
+                <h5 class="fw-bold text-navy">No Upcoming Camps or Lok Adalats</h5>
+                <p class="text-muted">Click the button below to schedule a new legal literacy camp or awareness drive.</p>
+                <div class="mt-2">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCampModal">
+                        <i class="bi bi-plus-circle me-1"></i>Schedule New Camp
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- All Events Pane -->
+        <div class="tab-pane fade" id="all-pane" role="tabpanel">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date & Schedule</th>
+                                <th>Event / Camp Title</th>
+                                <th>Type</th>
+                                <th>Place / Venue</th>
+                                <th>Assigned Duty PLVs</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in events %}
+                            <tr>
+                                <td>
+                                    <span class="fw-bold text-navy d-block">{{ event.event_date.strftime('%d %b %Y') }}</span>
+                                    <small class="text-muted">{{ event.time_schedule }}</small>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-navy">{{ event.title }}</div>
+                                    <small class="text-muted">{{ event.contact_person }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge {% if 'Lok Adalat' in event.event_type %}bg-primary{% else %}bg-warning text-dark{% endif %}">
+                                        {{ event.event_type }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <small class="d-block"><i class="bi bi-geo-alt text-danger me-1"></i>{{ event.venue }}</small>
+                                </td>
+                                <td style="max-width: 250px;">
+                                    {% if event.assigned_plvs %}
+                                    <small class="text-dark fw-semibold"><i class="bi bi-person-badge text-primary me-1"></i>{{ event.assigned_plvs }}</small>
+                                    {% else %}
+                                    <span class="badge bg-light text-secondary">None</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if event.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Archived</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editCampModal{{ event.id }}">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <form method="POST" action="{{ url_for('admin_toggle_camp_status', event_id=event.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary me-1" title="Toggle Status">
+                                            <i class="bi bi-arrow-repeat"></i>
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('admin_delete_camp', event_id=event.id) }}" class="d-inline" onsubmit="return confirm('Delete this record?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: ADD / SCHEDULE NEW CAMP & EVENT -->
+<!-- ========================================== -->
+<div class="modal fade" id="addCampModal" tabindex="-1" aria-labelledby="addCampModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <form method="POST" action="{{ url_for('admin_add_camp') }}" class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-navy text-white" style="background: #0f2b48;">
+                <h5 class="modal-title fw-bold" id="addCampModalLabel"><i class="bi bi-calendar-plus me-2 text-warning"></i>Schedule Legal Literacy Camp or Event</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4" style="max-height: calc(100vh - 210px); overflow-y: auto;">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Camp / Event Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control" placeholder="e.g., Mega Legal Literacy Camp - Ranavav & Jam Raval" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Event Type <span class="text-danger">*</span></label>
+                            <select name="event_type" id="addEventType" class="form-select" required onchange="toggleCustomType(this, 'addCustomTypeDiv')">
+                                <option value="Legal Literacy Camp">Legal Literacy Camp (કાનૂની સાક્ષરતા શિબિર)</option>
+                                <option value="National Lok Adalat">National Lok Adalat (રાષ્ટ્રીય લોક અદાલત)</option>
+                                <option value="Special Lok Adalat">Special Lok Adalat (ખાસ લોક અદાલત)</option>
+                                <option value="Rural Legal Awareness Drive">Rural Legal Awareness Drive</option>
+                                <option value="Women & Child Rights Awareness">Women & Child Rights Awareness</option>
+                                <option value="Senior Citizens Legal Literacy Camp">Senior Citizens Legal Literacy Camp</option>
+                                <option value="Fishermen & Coastal Community Camp">Fishermen & Coastal Community Camp</option>
+                                <option value="Jail / Undertrials Legal Clinic Camp">Jail / Undertrials Legal Clinic Camp</option>
+                                <option value="School & College Legal Aid Drive">School & College Legal Aid Drive</option>
+                                <option value="Other">Other (Custom Type)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 d-none" id="addCustomTypeDiv">
+                            <label class="form-label fw-semibold">Specify Custom Event Type</label>
+                            <input type="text" name="custom_event_type" class="form-control" placeholder="Enter custom event category">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Event Date <span class="text-danger">*</span></label>
+                            <input type="date" name="event_date" class="form-control" value="{{ today.strftime('%Y-%m-%d') }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Time Schedule <span class="text-danger">*</span></label>
+                            <input type="text" name="time_schedule" class="form-control" value="10:30 AM to 03:30 PM" placeholder="e.g., 10:30 AM to 03:30 PM" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Place / Venue Location <span class="text-danger">*</span></label>
+                            <input type="text" name="venue" class="form-control" list="venueList" placeholder="e.g., Community Hall, Ranavav Nagarpalika / District Court Complex" required>
+                            <datalist id="venueList">
+                                {% for d in deployments %}
+                                <option value="{{ d.place_name }}, {{ d.area_locality }}">
+                                {% endfor %}
+                                <option value="District & Sessions Court Complex, Rajmahal Road, Porbandar">
+                                <option value="Taluka Seva Sadan, Ranavav, Porbandar">
+                                <option value="Community Hall, Kutiyana, Porbandar">
+                                <option value="Gram Panchayat Hall, Madhavpur Ghed">
+                                <option value="Jilla Panchayat Bhawan, Opp. Circuit House, Porbandar">
+                            </datalist>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Matters to be Covered / Legal Topics <span class="text-danger">*</span></label>
+                            <textarea name="eligible_matters" class="form-control" rows="3" placeholder="e.g., Free Legal Aid under NALSA Scheme, Senior Citizens Maintenance Rights, Victim Compensation Scheme, Compoundable Police Challans, POCSO and Child Protection" required></textarea>
+                            <small class="text-muted">Enter key matters, welfare schemes, or legal subjects to be handled at this camp.</small>
+                        </div>
+
+                        <!-- ASSIGN DUTIES OF PLVS -->
+                        <div class="col-12">
+                            <div class="card border rounded-3 p-3 bg-light">
+                                <label class="form-label fw-bold text-navy mb-2">
+                                    <i class="bi bi-people-fill text-primary me-1"></i>Assign Duties of Para Legal Volunteers (PLVs)
+                                </label>
+                                <p class="text-muted small mb-2">Select certified PLVs who will be on duty for this scheduled camp, or type custom duty roles below:</p>
+
+                                <!-- PLV Quick Search within Modal -->
+                                <input type="text" class="form-control form-control-sm mb-2" placeholder="Quick search PLV by name or DLSA Sr. No..." onkeyup="filterPlvCheckboxes(this, 'addPlvList')">
+
+                                <!-- Scrollable Checkbox Grid -->
+                                <div id="addPlvList" class="p-2 bg-white rounded border" style="max-height: 180px; overflow-y: auto;">
+                                    <div class="row g-2">
+                                        {% for plv in plvs %}
+                                        <div class="col-md-6 plv-checkbox-item" data-text="{{ plv.dlsa_sr_no }} {{ plv.full_name|lower }}">
+                                            <div class="form-check small">
+                                                <input class="form-check-input" type="checkbox" name="assigned_plvs" value="PLV {{ plv.full_name }} (Sr. No. {{ plv.dlsa_sr_no or plv.id }})" id="add_plv_{{ plv.id }}">
+                                                <label class="form-check-label" for="add_plv_{{ plv.id }}">
+                                                    <span class="badge bg-navy text-white me-1">No. {{ plv.dlsa_sr_no }}</span>
+                                                    <strong>{{ plv.full_name }}</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="mt-2">
+                                    <label class="form-label small fw-semibold text-secondary mb-1">Additional Manual Duty Allocation / Desk Instructions:</label>
+                                    <input type="text" name="assigned_plvs_manual" class="form-control form-control-sm" placeholder="e.g., PLV Nimisha Joshi (Intake Desk), PLV Parth Rathod (Guidance Counter)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Presiding Officers / Dignitaries</label>
+                            <input type="text" name="presiding_officers" class="form-control" placeholder="e.g., Secretary DLSA Porbandar, Medical Officers & Panel Advocates">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Incharge / Contact Person</label>
+                            <input type="text" name="contact_person" class="form-control" value="Secretary, DLSA Porbandar (Ph: 0286-2244244)" placeholder="e.g., DLSA Porbandar Help Desk">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success fw-bold"><i class="bi bi-calendar-check me-1"></i>Save & Schedule Camp</button>
+                </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODALS: EDIT CAMP / EVENT FOR EACH SCHEDULE -->
+<!-- ========================================== -->
+{% for event in events %}
+<div class="modal fade" id="editCampModal{{ event.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <form method="POST" action="{{ url_for('admin_update_camp', event_id=event.id) }}" class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-navy text-white" style="background: #0f2b48;">
+                <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2 text-warning"></i>Edit Camp & PLV Duty Allocation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4" style="max-height: calc(100vh - 210px); overflow-y: auto;">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Camp / Event Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control" value="{{ event.title }}" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Event Type <span class="text-danger">*</span></label>
+                            <input type="text" name="event_type" class="form-control" value="{{ event.event_type }}" list="typeList" required>
+                            <datalist id="typeList">
+                                <option value="Legal Literacy Camp">
+                                <option value="National Lok Adalat">
+                                <option value="Special Lok Adalat">
+                                <option value="Rural Legal Awareness Drive">
+                                <option value="Women & Child Rights Awareness">
+                                <option value="Senior Citizens Legal Literacy Camp">
+                                <option value="Fishermen & Coastal Community Camp">
+                                <option value="Jail / Undertrials Legal Clinic Camp">
+                            </datalist>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Event Date <span class="text-danger">*</span></label>
+                            <input type="date" name="event_date" class="form-control" value="{{ event.event_date.strftime('%Y-%m-%d') }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Time Schedule <span class="text-danger">*</span></label>
+                            <input type="text" name="time_schedule" class="form-control" value="{{ event.time_schedule }}" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Place / Venue Location <span class="text-danger">*</span></label>
+                            <input type="text" name="venue" class="form-control" value="{{ event.venue }}" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Matters to be Covered / Legal Topics <span class="text-danger">*</span></label>
+                            <textarea name="eligible_matters" class="form-control" rows="3" required>{{ event.eligible_matters }}</textarea>
+                        </div>
+
+                        <!-- ASSIGN DUTIES OF PLVS -->
+                        <div class="col-12">
+                            <div class="card border rounded-3 p-3 bg-light">
+                                <label class="form-label fw-bold text-navy mb-1">
+                                    <i class="bi bi-people-fill text-primary me-1"></i>Assigned Duty PLVs (Para Legal Volunteers)
+                                </label>
+                                <p class="text-muted small mb-2">Edit duty assignments directly or select volunteers below:</p>
+
+                                <textarea name="assigned_plvs_text" class="form-control mb-2" rows="2" placeholder="e.g., PLV Nimisha Joshi (Sr. No. 01), PLV Parth Rathod (Sr. No. 03)">{{ event.assigned_plvs or '' }}</textarea>
+
+                                <!-- Scrollable Checkbox Selection for Quick Adding -->
+                                <input type="text" class="form-control form-control-sm mb-2" placeholder="Quick search PLV to add..." onkeyup="filterPlvCheckboxes(this, 'editPlvList{{ event.id }}')">
+
+                                <div id="editPlvList{{ event.id }}" class="p-2 bg-white rounded border" style="max-height: 140px; overflow-y: auto;">
+                                    <div class="row g-2">
+                                        {% for plv in plvs %}
+                                        {% set plv_tag = "PLV " ~ plv.full_name ~ " (Sr. No. " ~ (plv.dlsa_sr_no or plv.id) ~ ")" %}
+                                        <div class="col-md-6 plv-checkbox-item" data-text="{{ plv.dlsa_sr_no }} {{ plv.full_name|lower }}">
+                                            <div class="form-check small">
+                                                <input class="form-check-input" type="checkbox" name="assigned_plvs" value="{{ plv_tag }}" id="edit_plv_{{ event.id }}_{{ plv.id }}" {% if event.assigned_plvs and plv.full_name in event.assigned_plvs %}checked{% endif %}>
+                                                <label class="form-check-label" for="edit_plv_{{ event.id }}_{{ plv.id }}">
+                                                    <span class="badge bg-navy text-white me-1">No. {{ plv.dlsa_sr_no }}</span>
+                                                    <strong>{{ plv.full_name }}</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Presiding Officers / Mediators</label>
+                            <input type="text" name="presiding_officers" class="form-control" value="{{ event.presiding_officers or '' }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Incharge / Contact Person</label>
+                            <input type="text" name="contact_person" class="form-control" value="{{ event.contact_person or '' }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary fw-bold"><i class="bi bi-save me-1"></i>Save Changes</button>
+                </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+function toggleCustomType(selectElem, customDivId) {
+    var div = document.getElementById(customDivId);
+    if (selectElem.value === 'Other') {
+        div.classList.remove('d-none');
+    } else {
+        div.classList.add('d-none');
+    }
+}
+
+function filterPlvCheckboxes(inputElem, listContainerId) {
+    var filter = inputElem.value.toLowerCase();
+    var container = document.getElementById(listContainerId);
+    var items = container.getElementsByClassName('plv-checkbox-item');
+    for (var i = 0; i < items.length; i++) {
+        var text = items[i].getAttribute('data-text');
+        if (text.indexOf(filter) > -1) {
+            items[i].style.display = "";
+        } else {
+            items[i].style.display = "none";
+        }
+    }
+}
+</script>
+{% endblock %}

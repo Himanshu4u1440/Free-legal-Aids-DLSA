@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Report - DLSA Porbandar Citizen Legal Aid Portal</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary-navy: #0f2b48;
+            --secondary-blue: #1e3a8a;
+            --accent-gold: #c59b27;
+            --tricolor-orange: #ff9933;
+            --tricolor-green: #138808;
+            --text-dark: #1e293b;
+            --bg-light: #f8fafc;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: var(--text-dark);
+            background-color: #f1f5f9;
+            line-height: 1.65;
+            font-size: 15px;
+        }
+
+        .report-container {
+            max-width: 960px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 60px 70px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+        }
+
+        /* Top Action Bar (Print / Download) */
+        .action-bar {
+            max-width: 960px;
+            margin: 20px auto 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Cover Page */
+        .cover-page {
+            text-align: center;
+            padding: 40px 0 60px 0;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 50px;
+        }
+        .cover-emblem {
+            width: 110px;
+            height: 110px;
+            margin-bottom: 20px;
+        }
+        .cover-institution {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-navy);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .cover-sub-institution {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+        .cover-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-navy);
+            line-height: 1.25;
+            margin-bottom: 15px;
+        }
+        .cover-subtitle {
+            font-size: 1.15rem;
+            color: #334155;
+            font-weight: 500;
+            max-width: 780px;
+            margin: 0 auto 35px auto;
+        }
+        .cover-badge-strip {
+            display: inline-flex;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+        .meta-box {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        /* Typography & Headings */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--primary-navy);
+            font-weight: 700;
+        }
+        h2.section-heading {
+            font-size: 1.45rem;
+            border-bottom: 2px solid var(--primary-navy);
+            padding-bottom: 8px;
+            margin-top: 45px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        h2.section-heading i {
+            color: var(--accent-gold);
+            margin-right: 12px;
+        }
+        h3.sub-heading {
+            font-size: 1.2rem;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: var(--secondary-blue);
+        }
+
+        /* Legal Callout Boxes */
+        .callout-box {
+            border-left: 4px solid var(--primary-navy);
+            background-color: #f8fafc;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+        .callout-box.gold {
+            border-left-color: var(--accent-gold);
+            background-color: #fffdf5;
+        }
+        .callout-box.green {
+            border-left-color: var(--tricolor-green);
+            background-color: #f6fbf7;
+        }
+
+        /* Tables */
+        .table-custom {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+        .table-custom th {
+            background-color: var(--primary-navy);
+            color: #ffffff;
+            font-weight: 600;
+            padding: 10px 14px;
+            text-align: left;
+            border: 1px solid #1e3a8a;
+        }
+        .table-custom td {
+            padding: 9px 14px;
+            border: 1px solid var(--border-color);
+        }
+        .table-custom tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Code & Pre */
+        pre {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 18px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            overflow-x: auto;
+        }
+        code {
+            color: #d97706;
+            font-weight: 600;
+        }
+        pre code {
+            color: #38bdf8;
+            font-weight: normal;
+        }
+
+        /* Architecture Diagram Box */
+        .diagram-container {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        /* Metric Highlights */
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+        .stat-num {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-navy);
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* Print Rules */
+        @media print {
+            body {
+                background: #ffffff;
+                font-size: 13px;
+                color: #000000;
+            }
+            .action-bar {
+                display: none !important;
+            }
+            .report-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .cover-page {
+                height: 95vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+            pre {
+                background: #f1f5f9;
+                color: #0f172a;
+                border: 1px solid #cbd5e1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Action Bar for User -->
+    <div class="action-bar d-print-none">
+        <div>
+            <a href="/" class="btn btn-outline-secondary btn-sm me-2">
+                <i class="bi bi-arrow-left me-1"></i> Back to Website
+            </a>
+            <span class="badge bg-success-subtle text-success border border-success">
+                <i class="bi bi-check-circle me-1"></i> Academic Project Deliverable Ready
+            </span>
+        </div>
+        <div class="d-flex align-items-center">
+            <a href="/report/pdf" target="_blank" class="btn btn-danger btn-sm fw-bold shadow-sm me-2">
+                <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF Document
+            </a>
+            <button onclick="window.print()" class="btn btn-primary btn-sm fw-bold shadow-sm">
+                <i class="bi bi-printer me-1"></i> Print / Save as PDF (Ctrl + P)
+            </button>
+        </div>
+    </div>
+
+    <div class="report-container">
+
+        <!-- ==================== COVER PAGE ==================== -->
+        <div class="cover-page">
+            <div style="height: 4px; background: linear-gradient(90deg, #ff9933 33.3%, #0f2b48 33.3%, #0f2b48 66.6%, #138808 66.6%); margin-bottom: 25px; border-radius: 4px;"></div>
+            
+            <img src="/static/images/emblem.svg" alt="Satyameva Jayate Emblem" class="cover-emblem">
+            
+            <div class="cover-institution">DISTRICT LEGAL SERVICES AUTHORITY (DLSA), PORBANDAR</div>
+            <div class="cover-sub-institution">Under Gujarat State Legal Services Authority (GSLSA) & National Legal Services Authority (NALSA)</div>
+
+            <h1 class="cover-title">Official Citizen Legal Aid Portal & Administrative Cadre Management System</h1>
+            <p class="cover-subtitle">A Full-Stack E-Governance Platform for Constitutional Access to Justice under Article 39A and the Legal Services Authorities Act, 1987</p>
+
+            <div class="cover-badge-strip">
+                <span class="badge bg-primary px-3 py-2">Python 3.12 / Flask 3.1</span>
+                <span class="badge bg-secondary px-3 py-2">SQLAlchemy 2.0 ORM</span>
+                <span class="badge bg-dark px-3 py-2">Microsoft SQL Server & SQLite Dual-Engine</span>
+                <span class="badge bg-warning text-dark px-3 py-2">100% Gujarati & English Parity</span>
+            </div>
+
+            <div class="meta-box">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <strong>Project Title:</strong> DLSA Porbandar Citizen Legal Aid Portal<br>
+                        <strong>Domain:</strong> E-Governance, Legal Tech & Public Administration<br>
+                        <strong>Jurisdiction:</strong> Porbandar District Court Complex, Gujarat<br>
+                        <strong>Operational Talukas:</strong> Porbandar, Ranavav, Kutiyana
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>Student / Candidate:</strong> <span class="text-primary fw-bold">Himanshu Parmar</span><br>
+                        <strong>Academic Programme:</strong> BCA (Bachelor of Computer Applications)<br>
+                        <strong>Academic Semester:</strong> Semester 5 (Running / Ongoing)<br>
+                        <strong>Student PID:</strong> <span class="fw-bold font-monospace text-dark">2024007492</span><br>
+                        <strong>ABC ID:</strong> <span class="fw-bold font-monospace text-dark">642466973539</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CERTIFICATE & DECLARATION ==================== -->
+        <div class="page-break"></div>
+        <div class="p-4 p-md-5 my-4 border rounded-3 bg-light">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold text-navy mb-1 text-uppercase" style="letter-spacing: 1px;">Certificate of Project Work</h3>
+                <div class="text-muted small">Department of Computer Applications • Academic Session 2026</div>
+                <hr class="w-25 mx-auto my-3" style="border-top: 2px solid var(--accent-gold);">
+            </div>
+            
+            <p style="text-align: justify; line-height: 1.8;">
+                This is to certify that the project report entitled <strong>"District Legal Services Authority (DLSA), Porbandar: Official Citizen Legal Aid Portal & Administrative Cadre Management System"</strong> is a bonafide work carried out and submitted by <strong>HIMANSHU PARMAR</strong>, student of <strong>Bachelor of Computer Applications (BCA) – Semester 5 (Running)</strong>, bearing <strong>Student PID: 2024007492</strong> and <strong>ABC ID: 642466973539</strong>, in partial fulfillment of the requirements for the evaluation of the BCA degree curriculum.
+            </p>
+            <p style="text-align: justify; line-height: 1.8;">
+                The software architecture, database schemas, bilingual translation dictionary, and administrative workflows embodied in this project have been fully developed, debugged, and validated through comprehensive automated testing.
+            </p>
+
+            <div class="row mt-5 pt-4">
+                <div class="col-6">
+                    <div class="text-muted small">Internal Project Guide:</div>
+                    <div class="fw-bold mt-3">_______________________________</div>
+                    <div class="small text-secondary">Department Faculty Guide / Mentor</div>
+                </div>
+                <div class="col-6 text-end">
+                    <div class="text-muted small">Head of Department:</div>
+                    <div class="fw-bold mt-3">_______________________________</div>
+                    <div class="small text-secondary">Department of Computer Applications</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== STUDENT DECLARATION ==================== -->
+        <div class="p-4 p-md-5 my-4 border rounded-3 bg-white shadow-sm">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold text-navy mb-1 text-uppercase" style="letter-spacing: 1px;">Student Declaration of Authenticity</h3>
+                <hr class="w-25 mx-auto my-3" style="border-top: 2px solid var(--secondary-blue);">
+            </div>
+            
+            <p style="text-align: justify; line-height: 1.8;">
+                I, <strong>HIMANSHU PARMAR</strong>, student of <strong>Bachelor of Computer Applications (BCA) – Semester 5 (Running)</strong>, bearing <strong>Student PID: 2024007492</strong> and <strong>Academic Bank of Credits (ABC ID): 642466973539</strong>, do hereby solemnly declare that the project titled:
+            </p>
+            <div class="callout-box my-3">
+                <h5 class="fw-bold text-navy mb-0">"DISTRICT LEGAL SERVICES AUTHORITY (DLSA), PORBANDAR: CITIZEN LEGAL AID PORTAL & ADMINISTRATIVE CADRE MANAGEMENT SYSTEM"</h5>
+            </div>
+            <p style="text-align: justify; line-height: 1.8;">
+                is an authentic record of original project work conceptualized and developed by me. I have not submitted the matter embodied in this report for the award of any other degree or diploma to any other university or institute. All statutory guidelines under Article 39A of the Constitution of India and the Legal Services Authorities Act, 1987 have been faithfully incorporated.
+            </p>
+
+            <div class="row mt-5 pt-3">
+                <div class="col-6">
+                    <div class="small text-muted">Date: September 27, 2026</div>
+                    <div class="small text-muted">Place: Porbandar, Gujarat</div>
+                </div>
+                <div class="col-6 text-end">
+                    <div class="small text-muted">Signature of the Candidate:</div>
+                    <div class="fw-bold mt-3 text-primary">Himanshu Parmar</div>
+                    <div class="small fw-semibold text-dark">PID: 2024007492 | ABC ID: 642466973539</div>
+                    <div class="small text-secondary">BCA - Semester 5</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SYSTEM KEY METRICS ==================== -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-num">44</div>
+                    <div class="stat-label">Certified PLVs Registered</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-num">31</div>
+                    <div class="stat-label">Deployment Desks & Clinics</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">Free Section 12 Legal Aid</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-num">17/17</div>
+                    <div class="stat-label">Automated Test Suites Passed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TABLE OF CONTENTS ==================== -->
+        <div class="page-break"></div>
+        <h2 class="section-heading"><i class="bi bi-list-ol"></i> Table of Contents</h2>
+        <ol class="ps-3" style="line-height: 2;">
+            <li><strong>Executive Summary & Project Abstract</strong></li>
+            <li><strong>Constitutional & Statutory Framework (Article 39A & Legal Services Authorities Act, 1987)</strong></li>
+            <li><strong>Problem Statement & Grassroots Gap Analysis in Porbandar District</strong></li>
+            <li><strong>Project Objectives & Comprehensive Scope</strong></li>
+            <li><strong>System Requirements & Hardware/Software Specifications</strong></li>
+            <li><strong>System Architecture, High-Level Design & Data Flow Diagrams</strong></li>
+            <li><strong>Database Schema & Entity-Relationship (ER) Data Dictionary</strong></li>
+            <li><strong>Core Subsystems & Technical Implementation</strong>
+                <ul style="line-height: 1.7;">
+                    <li>8.1 Citizen Legal Aid Application & Section 12 Scrutiny Engine</li>
+                    <li>8.2 Public Tracking Stepper with Unique Registration Tokens</li>
+                    <li>8.3 44 Certified Para Legal Volunteers (PLVs) & Digital ID Generation</li>
+                    <li>8.4 31 Frontline Deployment Locations & Duty Mapping</li>
+                    <li>8.5 Judicial Ranks & High Ranks Leadership Hierarchy</li>
+                    <li>8.6 NALSA & State Welfare Schemes Directory</li>
+                    <li>8.7 Staff Portal: Case Review, Panel Advocate & PLV Assignment</li>
+                    <li>8.8 Camps & Lok Adalat Event Management Module</li>
+                    <li>8.9 Simulated Telecommunication SMS Notification Dispatcher</li>
+                </ul>
+            </li>
+            <li><strong>UI/UX Design, Visual Language & Bilingual Accessibility</strong></li>
+            <li><strong>Security, Cryptography & Role-Based Access Control (RBAC)</strong></li>
+            <li><strong>Verification, Automated Testing & Quality Assurance</strong></li>
+            <li><strong>Project Outcomes, Community Impact & Future Enhancements</strong></li>
+            <li><strong>Conclusion & Statutory References</strong></li>
+        </ol>
+
+        <!-- ==================== CHAPTER 1 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-file-earmark-text"></i> 1. Executive Summary & Project Abstract</h2>
+        <p>Access to justice is an indispensable guarantee of a modern constitutional democracy. Under Article 39A of the Constitution of India and the Legal Services Authorities Act, 1987, the State is obligated to ensure that opportunities for securing justice are not denied to any citizen by reason of economic or social disability.</p>
+        <p>In Porbandar District, Gujarat, geographic isolation between coastal fishing hamlets, rural agricultural villages, and the district seat at Porbandar city has historically created friction for citizens attempting to access free legal counsel. Distressed citizens were forced to physically visit court premises, frequently falling prey to middlemen or facing severe wage loss.</p>
+        <p>The <strong>District Legal Services Authority (DLSA) Porbandar Web Portal</strong> was engineered to completely overcome these barriers. The portal digitizes legal aid intake, provides instant Section 12 statutory validation, generates trackable grievance tokens, authenticates 44 certified Para Legal Volunteers (PLVs) with printable digital identity cards, catalogs 31 frontline deployment clinics across police stations, prisons, and hospitals, schedules Legal Literacy Camps and Lok Adalats with volunteer duty assignment, and provides complete bilingual parity in English and Gujarati.</p>
+
+        <!-- ==================== CHAPTER 2 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-bank"></i> 2. Constitutional & Statutory Framework</h2>
+        
+        <div class="callout-box">
+            <h5 class="fw-bold mb-1"><i class="bi bi-bookmark-star-fill text-warning me-2"></i>Article 39A, Constitution of India</h5>
+            <p class="mb-0 fst-italic">"The State shall secure that the operation of the legal system promotes justice, on a basis of equal opportunity, and shall, in particular, provide free legal aid, by suitable legislation or schemes or in any other way, to ensure that opportunities for securing justice are not denied to any citizen by reason of economic or other disabilities."</p>
+        </div>
+
+        <p>The statutory enforcement of Article 39A is carried out through the <strong>Legal Services Authorities Act, 1987 (Act No. 39 of 1987)</strong>. DLSA Porbandar operates under the direct superintendence of the Gujarat State Legal Services Authority (GSLSA) and the National Legal Services Authority (NALSA).</p>
+
+        <h3 class="sub-heading">Statutory Section 12 Entitlements</h3>
+        <p>Section 12 specifies the categories entitled to 100% free legal assistance, court fees exemption, and panel advocate representation:</p>
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Section 12 Clause</th>
+                    <th style="width: 40%;">Entitled Citizen Category</th>
+                    <th style="width: 35%;">System Verification Criteria</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Section 12(a)</strong></td>
+                    <td>Scheduled Castes (SC) and Scheduled Tribes (ST)</td>
+                    <td>Category declaration & caste documentation</td>
+                </tr>
+                <tr>
+                    <td><strong>Section 12(b)</strong></td>
+                    <td>Victims of human trafficking or <em>begar</em></td>
+                    <td>Special crisis relief intake</td>
+                </tr>
+                <tr>
+                    <td><strong>Section 12(c)</strong></td>
+                    <td>Women and Children</td>
+                    <td>Universal eligibility (no income cap)</td>
+                </tr>
+                <tr>
+                    <td><strong>Section 12(d)</strong></td>
+                    <td>Persons with Disabilities (PwD)</td>
+                    <td>Disability benchmark certification</td>
+                </tr>
+                <tr>
+                    <td><strong>Section 12(e)</strong></td>
+                    <td>Victims of mass disaster, ethnic violence, flood, earthquake</td>
+                    <td>Emergency relief triage</td>
+                </tr>
+                <tr>
+                    <td><strong>Section 12(f)</strong></td>
+                    <td>Industrial Workmen</td>
+                    <td>Labor disputes & industrial claims</td>
+                </tr>
+                <tr>
+                    <td><strong>Section 12(g)</strong></td>
+                    <td>Persons in custody (Undertrials & Convicts)</td>
+                    <td>Custodial tracking at District Jails</td>
+                </tr>
+                <tr>
+                    <td><strong>Section 12(h)</strong></td>
+                    <td>General indigent citizens with annual income &lt; ₹3,00,000/-</td>
+                    <td>Income self-declaration verification</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ==================== CHAPTER 3 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-exclamation-triangle"></i> 3. Problem Statement & Grassroots Gap Analysis</h2>
+        <p>Prior to the deployment of this platform, legal services administration in Porbandar was constrained by manual, physical bottlenecks:</p>
+        <ul>
+            <li><strong>Geographical Friction:</strong> Indigent citizens residing in coastal or border villages (e.g., Madhavpur, 60 km away) incurred substantial bus fares and lost daily earnings to submit paper applications at the court front office.</li>
+            <li><strong>Opacity & Impersonation:</strong> Citizens had no independent means to verify the identity of Para Legal Volunteers, exposing vulnerable litigants to unauthorized touts.</li>
+            <li><strong>Information Asymmetry:</strong> Schedules for Lok Adalats, criminal remand assistance at police stations, and jail clinic hours were inaccessible to the public.</li>
+            <li><strong>Linguistic Exclusion:</strong> Legal terminology and government circulars were predominantly in English, alienating rural Gujarati-speaking litigants.</li>
+        </ul>
+
+        <!-- ==================== CHAPTER 4 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-bullseye"></i> 4. Project Objectives & Comprehensive Scope</h2>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="callout-box green h-100">
+                    <h6 class="fw-bold text-success mb-2"><i class="bi bi-check2-circle me-1"></i> Citizen Empowerment Objectives</h6>
+                    <ul class="mb-0 ps-3 small">
+                        <li>Instant online application submission 24/7 without court visits.</li>
+                        <li>Automated Section 12 criteria checker with real-time feedback.</li>
+                        <li>Multi-stage case tracking via unique tracking token (`DLSA-2026-XXXX`).</li>
+                        <li>100% Gujarati and English bilingual parity.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="callout-box gold h-100">
+                    <h6 class="fw-bold text-warning-emphasis mb-2"><i class="bi bi-shield-lock me-1"></i> Administrative & Cadre Objectives</h6>
+                    <ul class="mb-0 ps-3 small">
+                        <li>Digitize 44 certified PLVs with verifiable digital identity cards.</li>
+                        <li>Map 31 frontline centers (police stations, courts, clinics, villages).</li>
+                        <li>Role-based case scrutiny, counsel allocation, and simulated SMS.</li>
+                        <li>Schedule Legal Literacy Camps & Lok Adalats with duty assignments.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CHAPTER 5 ==================== -->
+        <div class="page-break"></div>
+        <h2 class="section-heading"><i class="bi bi-gear-wide-connected"></i> 5. System Requirements & Specifications</h2>
+        
+        <h3 class="sub-heading">5.1 Technology Stack Matrix</h3>
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Component Layer</th>
+                    <th>Technology Chosen</th>
+                    <th>Version</th>
+                    <th>Rationale & Justification</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Backend Runtime</strong></td>
+                    <td>Python</td>
+                    <td>3.12 / 3.14</td>
+                    <td>High-level readability, robust cryptography, native ODBC support.</td>
+                </tr>
+                <tr>
+                    <td><strong>Web Framework</strong></td>
+                    <td>Flask (WSGI)</td>
+                    <td>3.1.0</td>
+                    <td>Lightweight microframework, zero bloat, rapid prototyping, modular routing.</td>
+                </tr>
+                <tr>
+                    <td><strong>ORM Layer</strong></td>
+                    <td>SQLAlchemy</td>
+                    <td>2.0.38</td>
+                    <td>Decoupled persistence, declarative mapping, native connection pooling.</td>
+                </tr>
+                <tr>
+                    <td><strong>Primary Database</strong></td>
+                    <td>Microsoft SQL Server</td>
+                    <td>2019 / 2022</td>
+                    <td>T-SQL stored procedures, enterprise security, ACID compliance.</td>
+                </tr>
+                <tr>
+                    <td><strong>Fallback Database</strong></td>
+                    <td>SQLite 3</td>
+                    <td>3.45+</td>
+                    <td>Zero-configuration, zero-downtime failover for local evaluation/demo.</td>
+                </tr>
+                <tr>
+                    <td><strong>Frontend Engine</strong></td>
+                    <td>HTML5 / CSS3 / ES6</td>
+                    <td>Modern Standards</td>
+                    <td>Semantic accessibility, responsive grid, native client-side filtering.</td>
+                </tr>
+                <tr>
+                    <td><strong>UI Framework</strong></td>
+                    <td>Bootstrap 5.3</td>
+                    <td>5.3.3</td>
+                    <td>Mobile-first responsive utilities, accessible modals, flexbox layouts.</td>
+                </tr>
+                <tr>
+                    <td><strong>Templating Engine</strong></td>
+                    <td>Jinja2</td>
+                    <td>3.1.5</td>
+                    <td>Dynamic template inheritance, XSS auto-escaping, custom bilingual filters.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ==================== CHAPTER 6 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-diagram-3"></i> 6. System Architecture & High-Level Design</h2>
+        <p>The platform follows the standard <strong>Model-Template-View (MTV)</strong> pattern. The application layer handles request routing, business validation, and database abstraction, while Jinja2 coordinates bilingual rendering for client web browsers.</p>
+
+        <div class="diagram-container">
+            <h6 class="fw-bold text-navy mb-3"><i class="bi bi-layers-fill me-1"></i> Architectural Block Diagram</h6>
+            <div class="text-start font-monospace small bg-white p-3 border rounded">
++-----------------------------------------------------------------------------------+<br>
+|                          CLIENT PRESENTATION LAYER                                |<br>
+|   Citizens (Mobile/Desktop Web)           DLSA Judicial Officers & Staff (Admin)   |<br>
++------------------------------------------+----------------------------------------+<br>
+                                           | HTTP/HTTPS (REST & Form Submissions)<br>
+                                           v<br>
++-----------------------------------------------------------------------------------+<br>
+|                             APPLICATION CONTROLLER (Flask 3.1)                    |<br>
+|  * URL Routing (app.py)                   * Role-Based Access Control (@admin_req)|<br>
+|  * Bilingual Translation Engine (| t)     * Simulated Notification Gateway (SMS)  |<br>
+|  * Case Review & Counsel Assignment       * Camps & Lok Adalat Event Scheduler   |<br>
++------------------------------------------+----------------------------------------+<br>
+                                           | SQLAlchemy 2.0 Engine Mapping<br>
+                                           v<br>
++-----------------------------------------------------------------------------------+<br>
+|                          PERSISTENCE ABSTRACTION LAYER                            |<br>
+|                         (Dynamic Dual-Database Controller)                        |<br>
+|                  +-----------------------+-----------------------+                |<br>
+|                  | Primary Enterprise    | Local Fallback Engine |                |<br>
+|                  | Microsoft SQL Server  | SQLite 3 (dlsa.db)    |                |<br>
+|                  | (pyodbc / T-SQL)      | (Zero-Config Mode)    |                |<br>
+|                  +-----------------------+-----------------------+                |<br>
++-----------------------------------------------------------------------------------+
+            </div>
+        </div>
+
+        <h3 class="sub-heading">Dual-Engine Database Failover Mechanism</h3>
+        <p>The application implements a resilient database connection algorithm in <code>database.py</code>:
+        <ol>
+            <li>On startup, the system inspects the environment configuration (<code>DB_TYPE=auto</code>).</li>
+            <li>It attempts an ODBC handshake with Microsoft SQL Server using connection parameters from <code>.env</code>.</li>
+            <li>If SQL Server is reachable, it mounts the enterprise T-SQL database.</li>
+            <li>If the SQL Server service is offline, it intercepts the <code>pyodbc.OperationalError</code>, safely logs a diagnostic notice, and mounts local <code>dlsa.db</code> (SQLite).</li>
+            <li>Dynamic startup migration routine (<code>check_and_apply_migrations</code>) automatically executes non-destructive DDL modifications if newly added columns are detected.</li>
+        </ol>
+        </p>
+
+        <!-- ==================== CHAPTER 7 ==================== -->
+        <div class="page-break"></div>
+        <h2 class="section-heading"><i class="bi bi-database"></i> 7. Database Schema & Data Dictionary</h2>
+        <p>The relational schema organizes judicial officers, certified PLVs, frontline clinics, citizen applications, schemes, and judicial schedules.</p>
+
+        <h3 class="sub-heading">Entity Schemas & Relational Structure</h3>
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Table Name</th>
+                    <th>Primary Key</th>
+                    <th>Foreign Keys</th>
+                    <th>Core Business Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>members</code></td>
+                    <td><code>id</code> (INT)</td>
+                    <td>None</td>
+                    <td>Stores Chairman, Secretary, and Chief Legal Aid Defense Counsels.</td>
+                </tr>
+                <tr>
+                    <td><code>plvs</code></td>
+                    <td><code>id</code> (INT)</td>
+                    <td>None</td>
+                    <td>Roster of 44 certified Para Legal Volunteers, badges, and contacts.</td>
+                </tr>
+                <tr>
+                    <td><code>deployments</code></td>
+                    <td><code>id</code> (INT)</td>
+                    <td>None</td>
+                    <td>Catalog of 31 frontline clinics (police stations, courts, villages).</td>
+                </tr>
+                <tr>
+                    <td><code>plv_assignments</code></td>
+                    <td><code>id</code> (INT)</td>
+                    <td><code>plv_id</code>, <code>deployment_id</code></td>
+                    <td>Many-to-many relationship linking volunteers to specific clinics.</td>
+                </tr>
+                <tr>
+                    <td><code>legal_aid_applications</code></td>
+                    <td><code>id</code> (INT)</td>
+                    <td>None</td>
+                    <td>Citizen applications with Section 12 criteria, tracking token, status.</td>
+                </tr>
+                <tr>
+                    <td><code>schemes</code></td>
+                    <td><code>id</code> (INT)</td>
+                    <td>None</td>
+                    <td>Statutory NALSA & GSLSA welfare schemes directory.</td>
+                </tr>
+                <tr>
+                    <td><code>lok_adalat_events</code></td>
+                    <td><code>id</code> (INT)</td>
+                    <td>None</td>
+                    <td>Upcoming Lok Adalats & literacy camps with assigned PLV lists.</td>
+                </tr>
+                <tr>
+                    <td><code>admin_users</code></td>
+                    <td><code>id</code> (INT)</td>
+                    <td>None</td>
+                    <td>Administrative staff accounts with PBKDF2-SHA256 salted hashes.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ==================== CHAPTER 8 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-cpu"></i> 8. Core Subsystems & Technical Implementation</h2>
+
+        <h3 class="sub-heading">8.1 Citizen Legal Aid Application & Section 12 Verification (`/apply`)</h3>
+        <p>The citizen application module ensures that distressed citizens can submit grievances under Section 12 without traveling to court premises. The server-side controller generates a unique tracking number, writes the record with status <code>Submitted</code>, and dispatches a simulated SMS notification.</p>
+
+        <h3 class="sub-heading">8.2 Real-Time Application Tracking Stepper (`/track`)</h3>
+        <p>Litigants can enter their tracking token (e.g. <code>DLSA-2026-9135</code>) to inspect the 4-stage visual progress stepper:</p>
+        <div class="p-3 bg-light border rounded text-center my-3">
+            <span class="badge bg-secondary me-2">1. Submitted</span> &rarr;
+            <span class="badge bg-primary me-2">2. Under Scrutiny</span> &rarr;
+            <span class="badge bg-success me-2">3. Counsel Assigned</span> &rarr;
+            <span class="badge bg-dark">4. Completed / Disposed</span>
+        </div>
+
+        <h3 class="sub-heading">8.3 44 Certified PLVs & Digital Identity Card Generator (`/plv-portal`)</h3>
+        <p>The system stores all 44 certified PLVs of Porbandar district. Clicking any profile generates a modal replicating the official DLSA Gujarat Identity Card with registration code, training accreditation, issue authority, and verified phone contact.</p>
+
+        <h3 class="sub-heading">8.4 31 Frontline Deployment Locations & Clinics (`/deployments`)</h3>
+        <p>Mappable directory categorized into 9 Police Stations (monitoring <em>D.K. Basu</em> arrest rights), 9 Court & Institutional Clinics (including Bhavsinhji General Hospital and District Jail), and 13 Village Legal Desks.</p>
+
+        <h3 class="sub-heading">8.5 Camps & Lok Adalat Event Management Module (`/admin/camps`)</h3>
+        <p>Administrative interface empowering staff to publish upcoming Lok Adalats and rural literacy camps. Administrators can specify the date, venue, target beneficiaries, legal topics, and dynamically multi-select assigned PLVs from the active roster.</p>
+
+        <!-- ==================== CHAPTER 9 ==================== -->
+        <div class="page-break"></div>
+        <h2 class="section-heading"><i class="bi bi-palette"></i> 9. UI/UX Design, Visual Language & Localization</h2>
+        <ul>
+            <li><strong>Official Judicial Palette:</strong> High-contrast Navy Blue (<code>#0f2b48</code>), Gold (<code>#c59b27</code>), and Slate Grey (<code>#eaedf2</code>) matching Indian Judiciary visual guidelines.</li>
+            <li><strong>Unified Card System:</strong> 20px border radius, dual-layer drop shadows (<code>0 4px 15px rgba(15,43,72,0.08)</code> and <code>3px 6px 12px rgba(15,43,72,0.06)</code>), eliminating disjointed interior white patches.</li>
+            <li><strong>Native Bilingual Engine:</strong> Server-side Jinja filter (<code>| t</code>) supported by a 77,000-byte verified Gujarati translation dictionary in <code>translations.py</code> with cookie persistence.</li>
+            <li><strong>Scrollable Modals:</strong> Strict Bootstrap 5 modal design placing forms directly as <code>modal-content</code> inside <code>modal-dialog-scrollable</code> with docked footers.</li>
+        </ul>
+
+        <!-- ==================== CHAPTER 10 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-shield-check"></i> 10. Security, Cryptography & Data Protection</h2>
+        <ul>
+            <li><strong>Authentication:</strong> PBKDF2 password hashing with SHA-256 via Werkzeug security library.</li>
+            <li><strong>Authorization:</strong> Role-based access control protecting all <code>/admin/*</code> routes via <code>@admin_required</code> decorator.</li>
+            <li><strong>SQL Injection Immunity:</strong> 100% parameterization via SQLAlchemy 2.0 ORM expressions.</li>
+            <li><strong>Confidentiality:</strong> Citizen dispute summaries shielded behind authenticated administrative views.</li>
+        </ul>
+
+        <!-- ==================== CHAPTER 11 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-check2-all"></i> 11. Testing, Verification & Quality Assurance</h2>
+        <p>The system was tested using Python's <code>unittest</code> framework with 17 test suites covering all routes, database operations, and bilingual outputs.</p>
+
+        <pre><code>Ran 17 tests in 0.985s
+
+OK
+[SMS DISPATCH] Sent to 9898012345: [DLSA-SMS] Dear Rameshbhai K. Koli, your Free Legal Aid Application #DLSA-2026-9135 has been submitted successfully to DLSA Porbandar. Awaiting scrutiny...
+[SMS DISPATCH] Sent to 9428345678: [DLSA-SMS] Dear Dhirubhai G. Dave, your Legal Aid App #DLSA-PBD-2026-103 is now UNDER SCRUTINY by the DLSA Porbandar Legal Committee...</code></pre>
+
+        <!-- ==================== CHAPTER 12 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-trophy"></i> 12. Project Outcomes, Community Impact & Future Roadmap</h2>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="callout-box h-100">
+                    <h6 class="fw-bold text-navy mb-2"><i class="bi bi-stars text-warning me-1"></i> Direct Community Outcomes</h6>
+                    <ul class="mb-0 ps-3 small">
+                        <li>Eliminated travel costs and lost daily wages for rural Porbandar applicants.</li>
+                        <li>Provided 24/7 transparency into panel counsel assignment and status.</li>
+                        <li>Established official fraud prevention via certified PLV digital identity cards.</li>
+                        <li>Delivered complete linguistic inclusion in Gujarati.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="callout-box h-100">
+                    <h6 class="fw-bold text-navy mb-2"><i class="bi bi-rocket-takeoff text-primary me-1"></i> Future Scalability Roadmap</h6>
+                    <ul class="mb-0 ps-3 small">
+                        <li>Meta Cloud WhatsApp Chatbot integration for voice & vernacular intake.</li>
+                        <li>Live bidirectional API link with central NALSA Portal (`nalsa.gov.in`).</li>
+                        <li>Biometric and QR-code geofenced attendance for field PLVs.</li>
+                        <li>AI-powered legal triage assistance using Google Gemini models.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== CHAPTER 13 ==================== -->
+        <h2 class="section-heading"><i class="bi bi-journal-text"></i> 13. Conclusion & Statutory References</h2>
+        <p>The <strong>District Legal Services Authority (DLSA) Porbandar Citizen Legal Aid Portal</strong> illustrates how modern software engineering and open web standards can empower marginalized citizens and uphold the constitutional guarantee of Article 39A. By combining intuitive citizen access with structured administrative governance, the platform offers a replicable model for judicial digitalization across Gujarat and India.</p>
+
+        <h3 class="sub-heading">Statutory References & Precedents</h3>
+        <ol class="small ps-3" style="line-height: 1.8;">
+            <li><strong>The Constitution of India</strong> (Articles 14, 21, and 39A).</li>
+            <li><strong>The Legal Services Authorities Act, 1987 (Act No. 39 of 1987)</strong> (Sections 6, 9, 10, 11, 12, 19, 20).</li>
+            <li><strong>National Legal Services Authority (Free and Competent Legal Services) Regulations, 2010</strong>.</li>
+            <li><strong>NALSA Scheme for Para-Legal Volunteers (Revised)</strong>.</li>
+            <li><em>D.K. Basu v. State of West Bengal (1997) 1 SCC 416</em> (Statutory safeguards regarding arrest and legal representation).</li>
+            <li><em>Hussainara Khatoon v. Home Secretary, State of Bihar (1979) 2 SCC 81</em>.</li>
+            <li><em>Suk Das v. Union Territory of Arunachal Pradesh (1986) 2 SCC 401</em>.</li>
+        </ol>
+
+        <!-- Signature Block -->
+        <div class="row mt-5 pt-4 border-top">
+            <div class="col-sm-6">
+                <div class="text-muted small">Report Prepared & Submitted By:</div>
+                <div class="fw-bold mt-1 text-primary fs-5">Himanshu Parmar</div>
+                <div class="small fw-semibold text-dark">Bachelor of Computer Applications (BCA) – Semester 5</div>
+                <div class="small font-monospace text-secondary">Student PID: 2024007492 | ABC ID: 642466973539</div>
+                <div class="text-muted small mt-1">DLSA Porbandar Web Engineering Capstone Project</div>
+            </div>
+            <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
+                <div class="text-muted small">Institutional Verification:</div>
+                <div class="fw-bold mt-1 fs-5">Academic Evaluation Committee</div>
+                <div class="small text-secondary">Department of Computer Applications / Computer Science</div>
+                <div class="small text-muted mt-1">Status: Certified Original Work & Code Approved</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}{% if current_lang == 'gu' %}જિલ્લા કાનૂની સેવા સત્તા મંડળ, પોરબંદર | સત્તાવાર નાગરિક પોર્ટલ{% else %}District Legal Services Authority, Porbandar | Official Citizen Portal{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center text-lg-start">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="hero-motto-tag">
+                    <i class="bi bi-shield-check me-1"></i> {% if current_lang == 'gu' %}ભારતનું સંવિધાન • કલમ ૩૯-એ • પોરબંદર જિલ્લા ન્યાય સેવા{% else %}Constitution of India • Article 39A • પોરબંદર જિલ્લા ન્યાય સેવા{% endif %}
+                </span>
+                <h1 class="hero-title">
+                    {% if current_lang == 'gu' %}જિલ્લા કાનૂની સેવા સત્તા મંડળ, પોરબંદર{% else %}District Legal Services Authority, Porbandar{% endif %}
+                </h1>
+                <p class="hero-subtitle">
+                    {% if current_lang == 'gu' %}
+                    પોરબંદર, છાયા, બોખીરા, રાણાવાવ, કુતિયાણા અને જામ રાવલના તમામ નાગરિકોને <strong>૧૦૦% મફત કાનૂની સહાય</strong>, <strong>૪૪ અધિકૃત પેરા લીગલ વોલેન્ટિયર્સ (PLVs)</strong> અને લોક અદાલત દ્વારા ઝડપી ન્યાય આપવા પ્રતિબદ્ધ.
+                    {% else %}
+                    Empowering the citizens of <strong>Porbandar, Chhaya, Bokhira, Ranavav, Kutiyana, and Jam Raval</strong> with <strong>100% Free Legal Aid</strong>, <strong>44 Authorized Para Legal Volunteers (PLVs)</strong>, and fast-track settlements through Lok Adalat.
+                    {% endif %}
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    <a href="{{ url_for('apply_legal_aid') }}" class="btn btn-warning btn-lg fw-bold text-dark px-4 shadow">
+                        <i class="bi bi-pencil-square me-2"></i>{% if current_lang == 'gu' %}મફત કાનૂની સહાય માટે અરજી કરો{% else %}Apply for Free Legal Aid{% endif %}
+                    </a>
+                    <a href="{{ url_for('plv_portal') }}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-people me-2"></i>{% if current_lang == 'gu' %}અમારા ૪૪ પોરબંદર પીએલવીને મળો{% else %}Meet Our 44 Porbandar PLVs{% endif %}
+                    </a>
+                    <a href="{{ url_for('deployments') }}" class="btn btn-outline-info btn-lg px-3">
+                        <i class="bi bi-geo-alt me-1"></i>{% if current_lang == 'gu' %}પોરબંદર ક્લિનિક્સ & ડેસ્ક{% else %}Porbandar Clinics & Desks{% endif %}
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center mt-5 mt-lg-0">
+                <div class="card shadow-lg border-0 rounded-4 p-4 text-dark bg-white">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white p-3 rounded-circle me-3">
+                            <i class="bi bi-clipboard2-check fs-3"></i>
+                        </div>
+                        <div class="text-start">
+                            <h5 class="fw-bold mb-0 text-primary">{% if current_lang == 'gu' %}મફત કાનૂની સહાય પાત્રતા તપાસો{% else %}Free Legal Aid Checker{% endif %}</h5>
+                            <small class="text-muted">{% if current_lang == 'gu' %}કલમ ૧૨ કાનૂની પાત્રતા (પોરબંદર){% else %}Section 12 Entitlement (પોરબંદર){% endif %}</small>
+                        </div>
+                    </div>
+                    <p class="small text-muted text-start mb-3">
+                        {% if current_lang == 'gu' %}પોરબંદર અદાલતોમાં મફત સરકારી વકીલ, મફત અરજી ડ્રાફ્ટિંગ અને કોર્ટ ફી માફી માટે તમારી પાત્રતા ચકાસો.{% else %}Check if you qualify for free defense lawyers, free court filing, and exemption from litigation fees in Porbandar Courts.{% endif %}
+                    </p>
+                    <div class="text-start small">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="chkWomanChild">
+                            <label class="form-check-label fw-semibold" for="chkWomanChild">{% if current_lang == 'gu' %}મહિલા અથવા બાળક (૧૮ વર્ષથી નીચે){% else %}Woman or Child (Below 18){% endif %}</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="chkSCST">
+                            <label class="form-check-label fw-semibold" for="chkSCST">{% if current_lang == 'gu' %}અનુસૂચિત જાતિ (SC) / અનુસૂચિત જનજાતિ (ST) સભ્ય{% else %}Member of SC / ST Community{% endif %}</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="chkCustody">
+                            <label class="form-check-label fw-semibold" for="chkCustody">{% if current_lang == 'gu' %}કસ્ટડી / ખાસ સબ-જેલ પોરબંદરમાં રહેલ વ્યક્તિ{% else %}Person in Custody / Sub-Jail Porbandar{% endif %}</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="chkWorkman">
+                            <label class="form-check-label fw-semibold" for="chkWorkman">{% if current_lang == 'gu' %}સાગરખેડૂ માછીમાર / અગરીયા / ઔદ્યોગિક શ્રમિક{% else %}Coastal Fisherman / Salt Worker / Workman{% endif %}</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="chkDisabled">
+                            <label class="form-check-label fw-semibold" for="chkDisabled">{% if current_lang == 'gu' %}દિવ્યાંગ વ્યક્તિ / માનસિક રીતે અસ્વસ્થ{% else %}Person with Disability / Mental Illness{% endif %}</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="checkIncome" class="form-label fw-semibold">{% if current_lang == 'gu' %}વાર્ષિક કૌટુંબિક આવક (₹):{% else %}Annual Family Income (₹):{% endif %}</label>
+                            <input type="number" class="form-control form-control-sm" id="checkIncome" placeholder="e.g. 120000">
+                            <small class="text-muted">{% if current_lang == 'gu' %}સામાન્ય મર્યાદા: વાર્ષિક ₹૩,૦૦,૦૦૦ સુધી{% else %}General threshold: Up to ₹3,00,000 / year{% endif %}</small>
+                        </div>
+                        <button type="button" class="btn btn-primary w-100 fw-bold" id="btnRunEligibilityCheck">
+                            <i class="bi bi-search me-1"></i>{% if current_lang == 'gu' %}મારી પાત્રતા અત્યારે જ તપાસો{% else %}Check My Eligibility Now{% endif %}
+                        </button>
+                    </div>
+                    <div id="eligibilityResult" class="text-start mt-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Live Key Statistics Banner -->
+<section class="stats-banner">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-6 col-md-3">
+                <div class="stat-box">
+                    <div class="stat-num text-primary">{{ stats.total_plvs }}</div>
+                    <div class="stat-label">{% if current_lang == 'gu' %}પ્રમાણિત પોરબંદર પીએલવી{% else %}Certified Porbandar PLVs{% endif %}</div>
+                    <small class="text-success fw-semibold"><i class="bi bi-check2-circle me-1"></i>{% if current_lang == 'gu' %}સત્તાવાર ઓળખપત્ર જારી{% else %}Official ID Cards Issued{% endif %}</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-box">
+                    <div class="stat-num text-success">{{ stats.total_deployments }}</div>
+                    <div class="stat-label">{% if current_lang == 'gu' %}કાર્યરત કેન્દ્રો અને ક્લિનિક્સ{% else %}Deployed Centers & Clinics{% endif %}</div>
+                    <small class="text-muted">{% if current_lang == 'gu' %}પોલીસ સ્ટેશનો, અદાલતો અને ગામો{% else %}Police Stations, Courts & Villages{% endif %}</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-box">
+                    <div class="stat-num text-warning">{{ stats.total_schemes }}</div>
+                    <div class="stat-label">{% if current_lang == 'gu' %}કલ્યાણકારી યોજનાઓ{% else %}Welfare Schemes{% endif %}</div>
+                    <small class="text-muted">{% if current_lang == 'gu' %}પીડિતો, માછીમારો અને બાળકો માટે{% else %}Victim Relief, Fishermen, Children{% endif %}</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-box">
+                    <div class="stat-num text-info">{{ stats.total_applications }}</div>
+                    <div class="stat-label">{% if current_lang == 'gu' %}નાગરિક કેસોમાં સહાય આપી{% else %}Citizen Cases Assisted{% endif %}</div>
+                    <small class="text-success fw-semibold"><i class="bi bi-shield-check me-1"></i>{% if current_lang == 'gu' %}પોરબંદર અદાલતોમાં સક્રિય{% else %}Active In Porbandar Courts{% endif %}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Citizen Action Modules -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary px-3 py-2 text-uppercase mb-2">{% if current_lang == 'gu' %}પોરબંદર જાહેર કાનૂની સેવાઓ{% else %}Porbandar Public Legal Services{% endif %}</span>
+            <h2 class="fw-bold text-navy">{% if current_lang == 'gu' %}ડીએલએસએ પોરબંદર સામાન્ય નાગરિકોની સેવા કેવી રીતે કરે છે{% else %}How DLSA Porbandar Serves Common Citizens{% endif %}</h2>
+            <p class="text-muted max-w-700 mx-auto">
+                {% if current_lang == 'gu' %}ગરીબી કે કાનૂની અજ્ઞાનતાને કારણે પોરબંદર જિલ્લાના કોઈપણ નાગરિકને ન્યાયથી વંચિત રહેવું પડશે નહીં. અમારી તમામ સેવાઓ ૧૦૦% નિઃશુલ્ક છે.{% else %}No resident of Porbandar district shall be denied justice due to poverty or lack of legal awareness. All our services are 100% free of cost.{% endif %}
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="action-card">
+                    <div class="action-card-icon">
+                        <i class="bi bi-person-video3"></i>
+                    </div>
+                    <h4 class="action-card-title">{% if current_lang == 'gu' %}મફત પેનલ વકીલો{% else %}Free Panel Lawyers{% endif %}</h4>
+                    <p class="action-card-desc">
+                        {% if current_lang == 'gu' %}પોરબંદરની અદાલતોમાં તમારા દીવાની, ફોજદારી, પારિવારિક કે મહેસૂલી કેસો લડવા માટે મફત બચાવ વકીલ અને સહાય કાઉન્સેલની નિમણૂક કરવામાં આવે છે.{% else %}Free defense advocates and legal aid counsel appointed to contest your civil, criminal, matrimonial, or revenue cases in Porbandar Courts.{% endif %}
+                    </p>
+                    <a href="{{ url_for('apply_legal_aid') }}" class="btn btn-sm btn-outline-primary fw-semibold mt-auto">
+                        {% if current_lang == 'gu' %}મફત વકીલ મેળવો &rarr;{% else %}Request Free Counsel &rarr;{% endif %}
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="action-card">
+                    <div class="action-card-icon" style="background: rgba(19, 136, 8, 0.1); color: #138808;">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h4 class="action-card-title">{% if current_lang == 'gu' %}૪૪ પેરા લીગલ વોલેન્ટિયર્સ{% else %}44 Para Legal Volunteers{% endif %}</h4>
+                    <p class="action-card-desc">
+                        {% if current_lang == 'gu' %}નાગરિકો અને ન્યાયતંત્ર વચ્ચે સેતુ બનવા માટે પોરબંદર, છાયા, બોખીરા, રાણાવાવ અને કુતિયાણામાં તૈનાત ૪૪ પ્રમાણિત પીએલવીનો સત્તાવાર સંવર્ગ.{% else %}Our officially certified cadre of 44 PLVs deployed across Porbandar, Chhaya, Bokhira, Ranavav, and Kutiyana to bridge citizens with justice.{% endif %}
+                    </p>
+                    <a href="{{ url_for('plv_portal') }}" class="btn btn-sm btn-outline-success fw-semibold mt-auto">
+                        {% if current_lang == 'gu' %}પીએલવી અને આઈડી કાર્ડ જુઓ &rarr;{% else %}Explore PLVs & ID Cards &rarr;{% endif %}
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="action-card">
+                    <div class="action-card-icon" style="background: rgba(245, 158, 11, 0.15); color: #b45309;">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <h4 class="action-card-title">{% if current_lang == 'gu' %}૩૧ નિમણૂક કેન્દ્રો{% else %}31 Deployment Centers{% endif %}</h4>
+                    <p class="action-card-desc">
+                        {% if current_lang == 'gu' %}પોરબંદર જિલ્લાના ૯ પોલીસ સ્ટેશનો, ૯ અદાલતી અને સંસ્થાકીય ક્લિનિક્સ તથા ૧૩ ગ્રામીણ લીગલ એઇડ ક્લિનિક્સ ખાતે ડીએલએસએ હેલ્પડેસ્કની મુલાકાત લો.{% else %}Visit DLSA helpdesks at 9 Police Stations, 9 Institutional & Court Clinics, and 13 Village Legal Aid Clinics across Porbandar District.{% endif %}
+                    </p>
+                    <a href="{{ url_for('deployments') }}" class="btn btn-sm btn-outline-warning text-dark fw-semibold mt-auto">
+                        {% if current_lang == 'gu' %}પોરબંદર કેન્દ્રો જુઓ &rarr;{% else %}View Porbandar Centers &rarr;{% endif %}
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="action-card">
+                    <div class="action-card-icon" style="background: rgba(124, 58, 237, 0.1); color: #7c3aed;">
+                        <i class="bi bi-bank2"></i>
+                    </div>
+                    <h4 class="action-card-title">{% if current_lang == 'gu' %}રાષ્ટ્રીય લોક અદાલત{% else %}National Lok Adalat{% endif %}</h4>
+                    <p class="action-card-desc">
+                        {% if current_lang == 'gu' %}શૂન્ય કોર્ટ ફી અને ભરેલી કોર્ટ ફીના ૧૦૦% પરત રિફંડ સાથે પેન્ડિંગ વિવાદો અને પ્રી-લિટિગેશન દાવાઓનું ઝડપી અને મૈત્રીપૂર્ણ સમાધાન.{% else %}Expeditious, friendly settlement of pending disputes and pre-litigation claims with zero court fees and complete refund of fees already paid.{% endif %}
+                    </p>
+                    <a href="{{ url_for('schemes') }}" class="btn btn-sm btn-outline-primary fw-semibold mt-auto">
+                        {% if current_lang == 'gu' %}લોક અદાલત વિગત &rarr;{% else %}Lok Adalat Notice &rarr;{% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Upcoming Porbandar Lok Adalats & Events (Judicial Schedules) -->
+<section class="py-5 bg-light border-top">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="badge bg-warning text-dark px-3 py-1 mb-2">{% if current_lang == 'gu' %}પોરબંદર અદાલતી કાર્યક્રમો{% else %}Porbandar Judicial Schedules{% endif %}</span>
+            <h2 class="fw-bold text-navy">{% if current_lang == 'gu' %}રાષ્ટ્રીય લોક અદાલત અને કાનૂની સાક્ષરતા શિબિરો{% else %}National Lok Adalat & Legal Literacy Camps{% endif %}</h2>
+            <p class="text-muted">{% if current_lang == 'gu' %}પોરબંદર જિલ્લામાં પેન્ડિંગ કોર્ટ કેસોનું સમાધાન અને જાહેર જાગૃતિ ઝુંબેશ{% else %}Settlement of court cases and public awareness drives in Porbandar District{% endif %}</p>
+        </div>
+
+        <div class="row g-4">
+            {% for event in events %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 rounded-4" style="border-radius: 20px !important; box-shadow: 6px 8px 24px rgba(15, 43, 72, 0.08) !important;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge {% if 'Lok Adalat' in event.event_type %}bg-primary{% else %}bg-warning text-dark{% endif %} px-2.5 py-1 fw-bold">{{ event.event_type | t }}</span>
+                            <span class="badge bg-navy text-white"><i class="bi bi-calendar-event me-1"></i>{{ event.event_date.strftime('%d %b %Y') }}</span>
+                        </div>
+                        <h5 class="card-title fw-bold text-navy mb-2">{{ event.title | t }}</h5>
+                        <p class="small text-muted mb-1"><i class="bi bi-geo-alt-fill me-1 text-danger"></i><strong>{% if current_lang == 'gu' %}સ્થળ:{% else %}Place:{% endif %}</strong> {{ event.venue | t }}</p>
+                        <p class="small text-muted mb-2"><i class="bi bi-clock-fill me-1 text-primary"></i><strong>{% if current_lang == 'gu' %}સમય:{% else %}Time:{% endif %}</strong> {{ event.time_schedule }}</p>
+                        <p class="small text-secondary mb-2"><strong>{% if current_lang == 'gu' %}સમાધાન પાત્ર બાબતો:{% else %}Matters Covered:{% endif %}</strong> {{ event.eligible_matters | t }}</p>
+                        
+                        {% if event.assigned_plvs %}
+                        <div class="small p-2.5 rounded-3 mt-auto mb-2" style="background-color: rgba(15, 43, 72, 0.05);">
+                            <div class="text-primary fw-semibold"><i class="bi bi-people-fill me-1"></i>{% if current_lang == 'gu' %}ફાળવેલ પીએલવી ફરજ:{% else %}Assigned Duty PLVs:{% endif %}</div>
+                            <div class="text-dark small mt-0.5">{{ event.assigned_plvs }}</div>
+                        </div>
+                        {% endif %}
+
+                        <div class="small border-top pt-2 mt-auto text-muted d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-person-badge me-1"></i>{{ event.contact_person | t }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- High Ranks & Management Preview (Authority Management) -->
+<section class="py-5 bg-white border-top">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
+            <div>
+                <span class="badge bg-secondary px-3 py-1 mb-2">{% if current_lang == 'gu' %}સત્તા મંડળ વહીવટ{% else %}Authority Management{% endif %}</span>
+                <h2 class="fw-bold text-navy mb-1">{% if current_lang == 'gu' %}ડીએલએસએ પોરબંદરનું સંચાલન કરતા ઉચ્ચ હોદ્દાઓ{% else %}Top High Ranks Managing DLSA Porbandar{% endif %}</h2>
+                <p class="text-muted mb-0">{% if current_lang == 'gu' %}પોરબંદર જિલ્લામાં કાનૂની સેવાઓનું નિયમન કરતા ન્યાયિક અધિકારીઓ અને કાનૂની સંરક્ષણ વડાઓ{% else %}Judicial Officers and Legal Defense leaders governing legal services across Porbandar District{% endif %}</p>
+            </div>
+            <a href="{{ url_for('leadership') }}" class="btn btn-primary fw-semibold mt-3 mt-md-0">
+                {% if current_lang == 'gu' %}સંપૂર્ણ માળખું અને હોદ્દાઓ જુઓ{% else %}View Full Hierarchy & Ranks{% endif %} <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for member in members[:3] %}
+            <div class="col-md-4">
+                <div class="official-card">
+                    <div class="official-header">
+                        <img src="{{ member.photo_url }}" alt="{{ member.name }}" class="official-avatar">
+                        <div>
+                            <div class="official-badge mb-1">{{ member.category | t }}</div>
+                            <h5 class="official-title mb-0">{{ member.name }}</h5>
+                            <small class="text-muted d-block">{{ member.designation | t }}</small>
+                        </div>
+                    </div>
+                    <div class="official-body">
+                        <p class="mb-3 small">{{ member.bio[:150] }}...</p>
+                        <div class="mt-auto pt-2 border-top small text-muted">
+                            <div><i class="bi bi-building me-1 text-primary"></i>{{ member.office_address[:45] }}...</div>
+                            <div class="mt-1"><i class="bi bi-telephone me-1 text-success"></i>{{ member.phone }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Para Legal Volunteers Highlights (Porbandar Cadre) -->
+<section class="py-5 bg-light border-top">
+    <div class="container">
+        <div class="row align-items-center mb-4">
+            <div class="col-lg-8">
+                <span class="badge bg-success px-3 py-1 mb-2">{% if current_lang == 'gu' %}સત્તાવાર સંવર્ગ • ગુજરાત{% else %}Official Cadre • Gujarat{% endif %}</span>
+                <h2 class="fw-bold text-navy">{% if current_lang == 'gu' %}ડીએલએસએ પોરબંદરના પ્રમાણિત પેરા લીગલ વોલેન્ટિયર્સ{% else %}Certified Para Legal Volunteers of DLSA Porbandar{% endif %}</h2>
+                <p class="text-muted">
+                    {% if current_lang == 'gu' %}
+                    ચેરમેનશ્રી, ડીએલએસએ પોરબંદરના સત્તાવાર સીલ હેઠળ પસંદ થયેલ, પ્રશિક્ષિત અને પ્રમાણિત સ્વયંસેવકો. આ સ્વયંસેવકો પોરબંદર, છાયા, બોખીરા, ખપટ અને જામ રાવલના વિસ્તારોમાં સેવા આપે છે.
+                    {% else %}
+                    Selected, trained, and certified under the seal of the Chairman, DLSA Porbandar. These volunteers actively serve across local communities in Porbandar, Chhaya, Bokhira, Khapat, and Jam Raval.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('plv_portal') }}" class="btn btn-outline-success fw-bold">
+                    <i class="bi bi-card-checklist me-1"></i>{% if current_lang == 'gu' %}તમામ ૪૪ પીએલવી અને આઈડી કાર્ડ જુઓ{% else %}View All 44 PLVs & ID Cards{% endif %}
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for plv in plvs[:3] %}
+            <div class="col-md-4">
+                <div class="plv-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ plv.photo_url }}" alt="{{ plv.full_name }}" class="rounded-circle me-3" style="width: 58px; height: 58px; border: 2px solid #0f2b48;">
+                        <div>
+                            <span class="badge bg-navy text-white mb-1">
+                                DLSA Sr. No. {{ plv.dlsa_sr_no }}
+                            </span>
+                            <h6 class="fw-bold mb-0">{{ plv.full_name }}</h6>
+                            <small class="text-muted font-monospace">{{ plv.registration_no }}</small>
+                        </div>
+                    </div>
+                    <div class="small mb-3">
+                        <div class="text-muted mb-1"><i class="bi bi-shield-check me-1 text-primary"></i><strong>{% if current_lang == 'gu' %}હોદ્દો:{% else %}Role:{% endif %}</strong> {% if current_lang == 'gu' %}પીએલવી (પેરા લીગલ વોલેન્ટિયર){% else %}PLV (Para Legal Volunteer){% endif %}</div>
+                        <div class="text-muted mb-1"><i class="bi bi-geo-alt me-1 text-danger"></i><strong>{% if current_lang == 'gu' %}અધિકારક્ષેત્ર:{% else %}Jurisdiction:{% endif %}</strong> {% if current_lang == 'gu' %}પોરબંદર જિલ્લો, ગુજરાત{% else %}Porbandar District, Gujarat{% endif %}</div>
+                        <div class="text-muted"><i class="bi bi-building me-1 text-success"></i><strong>{% if current_lang == 'gu' %}ફાળવેલ કેન્દ્ર:{% else %}Assigned Center:{% endif %}</strong> {{ plv.current_deployment | t }}</div>
+                    </div>
+                    <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center small">
+                        <span class="text-muted"><i class="bi bi-shield-lock me-1"></i>DLSA Porbandar</span>
+                        <a href="{{ url_for('plv_portal') }}" class="text-primary fw-semibold text-decoration-none">{% if current_lang == 'gu' %}વિગતો જુઓ &rarr;{% else %}View Details &rarr;{% endif %}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

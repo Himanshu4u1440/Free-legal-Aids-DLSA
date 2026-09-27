@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="grad_plv_pbd_43_svg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0e7490;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f2b48;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="95" fill="url(#grad_plv_pbd_43_svg)" stroke="#c59b27" stroke-width="4"/>
+  <text x="100" y="115" font-family="Segoe UI, sans-serif" font-size="52" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="1">BS</text>
+  <rect x="25" y="148" width="150" height="28" rx="6" fill="#0f2b48" opacity="0.95"/>
+  <text x="100" y="167" font-family="Segoe UI, sans-serif" font-size="10" font-weight="bold" fill="#ffdf7a" text-anchor="middle">PLV • NO.43</text>
+</svg>

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}DLSA Staff & Administrative Login{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-navy text-white text-center p-4" style="background: #0f2b48;">
+                    <img src="{{ url_for('static', filename='images/emblem.svg') }}" alt="Emblem" style="height: 60px;" class="mb-2">
+                    <h5 class="fw-bold mb-0">DLSA Staff Login</h5>
+                    <small class="text-warning">Management & Administrative Portal</small>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('admin_login') }}">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" name="username" class="form-control" placeholder="e.g. admin" required autofocus>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 fw-bold text-dark shadow-sm py-2">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Secure Login
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

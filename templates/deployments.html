@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}{% if current_lang == 'gu' %}નિમણૂક કેન્દ્રો અને લીગલ એઇડ ક્લિનિક્સ | ડીએલએસએ પોરબંદર{% else %}Places of Deployment & Legal Aid Clinics | DLSA Porbandar{% endif %}{% endblock %}
+
+{% block content %}
+<div class="bg-navy text-white py-4" style="background: linear-gradient(135deg, #1e3a8a 0%, #0f2b48 100%);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-white-50 text-decoration-none">{% if current_lang == 'gu' %}મુખપૃષ્ઠ{% else %}Home{% endif %}</a></li>
+                <li class="breadcrumb-item active text-warning" aria-current="page">{% if current_lang == 'gu' %}નિમણૂક સ્થાનો{% else %}Deployment Places{% endif %}</li>
+            </ol>
+        </nav>
+        <h1 class="fw-bold mb-1"><i class="bi bi-geo-alt-fill me-2"></i>{% if current_lang == 'gu' %}પીએલવી અને કાનૂની સહાય ક્લિનિક્સ કાર્યરત હોય તેવા સ્થળો{% else %}Places Where PLVs & Legal Aid Clinics are Deployed{% endif %}</h1>
+        <p class="text-white-50 mb-0">{% if current_lang == 'gu' %}અદાલતો, પોલીસ સ્ટેશનો, જેલ, હોસ્પિટલો અને ગ્રામીણ ક્લિનિક્સમાં ડીએલએસએ સહાય ડેસ્ક શોધો{% else %}Locate official DLSA assistance desks across courts, police stations, prisons, hospitals, and rural clinics{% endif %}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Explanatory intro for citizens -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+        <h4 class="fw-bold text-navy mb-2"><i class="bi bi-pin-map-fill text-danger me-2"></i>{% if current_lang == 'gu' %}ડીએલએસએ હેલ્પડેસ્ક અહીં શા માટે ઉપલબ્ધ છે?{% else %}Why Are DLSA Helpdesks Located Here?{% endif %}</h4>
+        <p class="small text-muted mb-0">
+            {% if current_lang == 'gu' %}
+            સંકટના સમયે સામાન્ય નાગરિકોને ત્વરિત ન્યાય મળી રહે તે માટે, ડીએલએસએ પોરબંદર દ્વારા પ્રશિક્ષિત પેરા લીગલ વોલેન્ટિયર્સ (PLVs) અને પેનલ વકીલોને સીધા જ મહત્વની સંસ્થાઓમાં તૈનાત કરવામાં આવે છે. પોલીસ સ્ટેશનમાં કોઈની અટકાયત થઈ હોય, જેલમાં કાચા કામના કેદી હોય, હોસ્પિટલમાં એસિડ એટેક અથવા દુર્ઘટના પીડિત દાખલ હોય, કે ગ્રામીણ નાગરિકને જમીન વિવાદ અંગે મફત કાનૂની સલાહ જોઈતી હોય - અમારું ડેસ્ક સીધું જ છેવાડાના માનવી સુધી પહોંચી ૧૦૦% મફત સેવા આપે છે.
+            {% else %}
+            To ensure immediate access to justice at the critical moments of distress, DLSA deploys trained Para Legal Volunteers (PLVs) and panel lawyers directly into frontline institutions. Whether an arrest has been made at a police station, an undertrial is detained inside a prison, an acid attack survivor is admitted to a hospital, or a rural villager needs land dispute advice, our desks operate right at the grassroots.
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- Search Bar & Category Filter Buttons -->
+    <div class="row g-3 mb-4 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group shadow-sm rounded-3">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" id="deploymentSearchInput" class="form-control border-start-0 ps-0" placeholder="{% if current_lang == 'gu' %}સ્થળ, ગામ અથવા પીએલવીનું નામ શોધો...{% else %}Search center, village, or PLV name...{% endif %}">
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                <button class="btn btn-primary deployment-filter-btn active" data-filter="all">{% if current_lang == 'gu' %}તમામ સ્થાનો ({{ deployments|length }}){% else %}All Locations ({{ deployments|length }}){% endif %}</button>
+                <button class="btn btn-outline-primary deployment-filter-btn" data-filter="Police Station">{% if current_lang == 'gu' %}પોલીસ સ્ટેશનો (૯){% else %}Police Stations (9){% endif %}</button>
+                <button class="btn btn-outline-primary deployment-filter-btn" data-filter="Court & Institutional Clinic">{% if current_lang == 'gu' %}અદાલત અને સંસ્થાકીય ક્લિનિક્સ (૯){% else %}Courts & Institutional Clinics (9){% endif %}</button>
+                <button class="btn btn-outline-primary deployment-filter-btn" data-filter="Village Legal Aid Clinic">{% if current_lang == 'gu' %}ગ્રામીણ લીગલ એઇડ ક્લિનિક્સ (૧૩){% else %}Village Legal Aid Clinics (13){% endif %}</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deployments Grid -->
+    <div class="row g-4" id="deploymentsGrid">
+        {% for place in deployments %}
+        {% set active_assigned_list = place.active_assignments %}
+        <div class="col-lg-6 deployment-item" data-type="{{ place.place_type }}" data-search="{{ place.place_name|lower }} {{ place.address|lower }} {{ place.area_locality|lower }} {% for a in active_assigned_list %}{{ a.plv.full_name|lower }} {% endfor %}">
+            <div class="place-card">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                    <span class="badge place-type-badge text-wrap text-start"><i class="bi bi-tag me-1"></i>{{ place.place_type | t }}</span>
+                    <span class="badge bg-success-subtle text-success border border-success text-wrap text-start" style="white-space: normal; line-height: 1.35; max-width: 100%;">
+                        <i class="bi bi-clock me-1"></i>{{ place.operating_hours | t }}
+                    </span>
+                </div>
+                <h4 class="fw-bold text-navy mb-1 fs-5 fs-md-4">{{ place.place_name | t }}</h4>
+                <div class="text-muted small mb-1"><i class="bi bi-geo-alt me-1 text-danger"></i>{{ place.address | t }} ({{ place.area_locality | t }})</div>
+                {% if place.police_jurisdiction %}
+                <small class="text-secondary d-block mb-3"><i class="bi bi-shield me-1"></i>{% if current_lang == 'gu' %}અધિકારક્ષેત્ર:{% else %}Jurisdiction:{% endif %} {{ place.police_jurisdiction | t }}</small>
+                {% else %}
+                <div class="mb-3"></div>
+                {% endif %}
+
+                <!-- Services Available Subcard -->
+                <div class="info-subcard mb-3">
+                    <h6 class="fw-bold text-navy mb-2"><i class="bi bi-list-check me-1 text-primary"></i>{% if current_lang == 'gu' %}નાગરિકો માટે ઉપલબ્ધ સેવાઓ:{% else %}Services Available to the Public:{% endif %}</h6>
+                    <div class="small text-secondary">
+                        {{ place.services_offered | t }}
+                    </div>
+                </div>
+
+                <!-- Facilities Available Subcard -->
+                {% if place.facilities_available %}
+                <div class="info-subcard mb-3">
+                    <h6 class="fw-bold text-navy mb-1"><i class="bi bi-building-check me-1 text-success"></i>{% if current_lang == 'gu' %}સ્થળ પર ઉપલબ્ધ સુવિધાઓ:{% else %}Facilities on Site:{% endif %}</h6>
+                    <div class="small text-muted">{{ place.facilities_available | t }}</div>
+                </div>
+                {% endif %}
+
+                <!-- Currently Assigned PLVs Subcard -->
+                <div class="info-subcard mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="fw-bold text-navy mb-0"><i class="bi bi-people-fill me-1 text-warning"></i>{% if current_lang == 'gu' %}ફાળવેલ પેરા લીગલ વોલેન્ટિયર્સ (PLVs):{% else %}Assigned Para Legal Volunteers (PLVs):{% endif %}</h6>
+                        <span class="badge bg-warning text-dark"><i class="bi bi-person-check-fill me-1"></i>{{ active_assigned_list|length }} {% if current_lang == 'gu' %}હાજર પીએલવી{% else %}Deployed PLVs{% endif %}</span>
+                    </div>
+                    
+                    <div class="list-group list-group-flush border shadow-none bg-white overflow-hidden" style="max-height: 250px; overflow-y: auto; border-radius: 12px; border-color: #e2e8f0 !important;">
+                        {% for a in active_assigned_list %}
+                            <div class="list-group-item p-2.5 px-3">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                    <div class="d-flex align-items-center flex-grow-1 min-w-0" style="min-width: 200px;">
+                                        <img src="{{ a.plv.photo_url or url_for('static', filename='images/avatar_placeholder.svg') }}" alt="{{ a.plv.full_name }}" class="rounded-circle me-2.5 border flex-shrink-0" style="width: 38px; height: 38px; object-fit: cover; box-shadow: 2px 3px 6px rgba(15, 43, 72, 0.18);">
+                                        <div class="flex-grow-1 min-w-0">
+                                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                                <span class="fw-bold text-navy small">{{ a.plv.full_name }}</span>
+                                                {% if a.plv.dlsa_sr_no %}
+                                                <span class="badge bg-navy text-white font-monospace px-1.5 py-0.5" style="font-size: 0.72rem;">DLSA-{{ a.plv.dlsa_sr_no }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="text-muted small mt-0.5" style="font-size: 0.76rem; line-height: 1.35;">
+                                                <span class="text-dark fw-semibold">{{ a.duty_role | t }}</span> &bull; <span>{{ a.days_of_week | t }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center ms-auto flex-shrink-0">
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle py-1 px-2 text-nowrap" style="font-size: 0.72rem;">
+                                            <i class="bi bi-shield-check me-1"></i>{% if current_lang == 'gu' %}ફરજ પર સક્રિય{% else %}On Active Duty{% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="list-group-item p-3 text-muted small text-center">
+                                {% if current_lang == 'gu' %}ડીએલએસએ રોસ્ટર પેનલ એડવોકેટ્સ દ્વારા સંચાલિત{% else %}Managed by DLSA Roster Panel Advocates on Duty{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- In-charge & Helpline Subcard -->
+                <div class="info-subcard mt-auto mb-0">
+                    <div class="row g-2 small align-items-center">
+                        <div class="col-sm-6">
+                            <i class="bi bi-person-badge me-1 text-primary"></i><strong>{% if current_lang == 'gu' %}ઇન્ચાર્જ:{% else %}In-charge:{% endif %}</strong> {{ (place.incharge_officer or 'DLSA Officer') | t }}
+                        </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <i class="bi bi-telephone me-1 text-success"></i><strong>{% if current_lang == 'gu' %}હેલ્પલાઇન:{% else %}Helpline:{% endif %}</strong> <a href="tel:{{ place.contact_phone or '15100' }}" class="text-decoration-none text-navy fw-semibold">{{ place.contact_phone or '15100' }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

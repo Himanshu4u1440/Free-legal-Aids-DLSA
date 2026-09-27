@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}District Legal Services Authority, Porbandar | જિલ્લા કાનૂની સેવા સત્તા મંડળ{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.1">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- National & Gujarat Tricolor Accent Strip -->
+    <div style="height: 4px; background: linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%);"></div>
+
+    <!-- Official Top Accessibility & Emergency Helpline Bar -->
+    <div class="gov-topbar">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center">
+            <div class="d-flex align-items-center small">
+                <span class="badge bg-warning text-dark me-2 fw-bold">{% if current_lang == 'gu' %}૨૪x૭ હેલ્પલાઇન{% else %}24x7 HELPLINE{% endif %}</span>
+                <span>{% if current_lang == 'gu' %}રાષ્ટ્રીય કાનૂની સહાય:{% else %}National Legal Aid:{% endif %} <a href="tel:15100" class="fw-bold text-warning text-decoration-none">15100</a></span>
+                <span class="mx-2 d-none d-md-inline text-muted">|</span>
+                <span class="d-none d-md-inline"><i class="bi bi-telephone me-1 text-warning"></i>{% if current_lang == 'gu' %}ડીએલએસએ પોરબંદર કાર્યાલય: <strong>૦૨૮૬-૨૨૪૪૨૪૪</strong>{% else %}DLSA Porbandar Office: <strong>0286-2244244</strong>{% endif %}</span>
+                <span class="mx-2 d-none d-md-inline text-muted">|</span>
+                <span class="d-none d-md-inline"><i class="bi bi-clock me-1"></i> {% if current_lang == 'gu' %}સોમ-શનિ: ૧૦:૦૦ થી ૦૫:૩૦{% else %}Mon-Sat: 10:00 AM - 05:30 PM{% endif %}</span>
+            </div>
+            <div class="d-flex align-items-center small mt-1 mt-md-0">
+                <span class="me-3 d-none d-lg-inline"><i class="bi bi-geo-alt me-1 text-warning"></i>{% if current_lang == 'gu' %}પોરબંદર, ગુજરાત{% else %}Porbandar, Gujarat{% endif %}</span>
+                
+                <!-- Language Switcher Option (English / Gujarati) -->
+                <div class="lang-switcher-pill d-inline-flex align-items-center bg-dark bg-opacity-75 border border-secondary rounded-pill px-2 py-0 me-2 me-md-3">
+                    <i class="bi bi-translate text-warning me-1" style="font-size: 0.8rem;"></i>
+                    <a href="{{ url_for('set_language', lang='en') }}" class="lang-switch-btn text-decoration-none {% if current_lang != 'gu' %}text-warning fw-bold{% else %}text-white-50{% endif %} px-1" data-lang="en" title="Switch to English" style="font-size: 0.8rem;">English</a>
+                    <span class="text-secondary opacity-50">|</span>
+                    <a href="{{ url_for('set_language', lang='gu') }}" class="lang-switch-btn text-decoration-none {% if current_lang == 'gu' %}text-warning fw-bold{% else %}text-white-50{% endif %} px-1" data-lang="gu" title="ગુજરાતીમાં જુઓ" style="font-size: 0.8rem;">ગુજરાતી</a>
+                </div>
+
+                {% if active_db %}
+                <span class="badge bg-secondary me-2 d-none d-sm-inline" title="Active Database Engine">
+                    <i class="bi bi-database me-1"></i>{{ active_db }}
+                </span>
+                {% endif %}
+                {% if session.get('admin_user') %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm btn-outline-warning text-warning py-0 px-2">
+                        <i class="bi bi-speedometer2 me-1"></i>{% if current_lang == 'gu' %}એડમિન પેનલ{% else %}Admin Panel{% endif %}
+                    </a>
+                    <a href="{{ url_for('admin_logout') }}" class="text-danger ms-2 text-decoration-none">{% if current_lang == 'gu' %}લૉગઆઉટ{% else %}Logout{% endif %}</a>
+                {% else %}
+                    <a href="{{ url_for('admin_login') }}" class="text-light text-decoration-none">
+                        <i class="bi bi-shield-lock me-1"></i>{% if current_lang == 'gu' %}ડીએલએસએ સ્ટાફ પોર્ટલ{% else %}DLSA Staff Portal{% endif %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <nav class="navbar navbar-expand-lg dlsa-navbar sticky-top">
+        <div class="container dlsa-nav-container">
+            <div class="dlsa-brand-wrapper">
+                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/emblem.svg') }}" alt="DLSA Porbandar Emblem" class="dlsa-brand-emblem flex-shrink-0">
+                    <div class="dlsa-brand-text">
+                        <div class="dlsa-brand-title">DISTRICT LEGAL SERVICES AUTHORITY, PORBANDAR</div>
+                        <div class="dlsa-brand-subtitle">જિલ્લા કાનૂની સેવા સત્તા મંડળ, પોરબંદર • Under GSLSA & NALSA</div>
+                    </div>
+                </a>
+                
+                <button class="navbar-toggler flex-shrink-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == 'home' %}active{% endif %}" href="{{ url_for('index') }}">
+                            <i class="bi bi-house-door me-1"></i>{% if current_lang == 'gu' %}મુખપૃષ્ઠ{% else %}Home{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == 'leadership' %}active{% endif %}" href="{{ url_for('leadership') }}">
+                            <i class="bi bi-diagram-3 me-1"></i>{% if current_lang == 'gu' %}ન્યાયિક પદ (Rank){% else %}Rank{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == 'plv' %}active{% endif %}" href="{{ url_for('plv_portal') }}">
+                            <i class="bi bi-people me-1"></i>{% if current_lang == 'gu' %}પોરબંદર પીએલવી (૪૪){% else %}Porbandar PLVs (44){% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == 'deployments' %}active{% endif %}" href="{{ url_for('deployments') }}">
+                            <i class="bi bi-geo-alt me-1"></i>{% if current_lang == 'gu' %}નિમણૂક કેન્દ્રો & ક્લિનિક્સ{% else %}Deployments & Clinics{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == 'schemes' %}active{% endif %}" href="{{ url_for('schemes') }}">
+                            <i class="bi bi-journal-bookmark me-1"></i>{% if current_lang == 'gu' %}કાનૂની યોજનાઓ{% else %}Schemes{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == 'track' %}active{% endif %}" href="{{ url_for('track_application') }}">
+                            <i class="bi bi-search me-1"></i>{% if current_lang == 'gu' %}અરજી સ્થિતિ{% else %}Track Status{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="btn btn-warning fw-bold text-dark px-3 shadow-sm" href="{{ url_for('apply_legal_aid') }}">
+                            <i class="bi bi-file-earmark-text me-1"></i>{% if current_lang == 'gu' %}મફત કાનૂની સહાય મેળવો{% else %}Apply Free Legal Aid{% endif %}
+                        </a>
+                    </li>
+                    <!-- Mobile drawer language switch -->
+                    <li class="nav-item d-lg-none mt-3 pt-2 border-top border-secondary">
+                        <div class="d-flex align-items-center justify-content-between px-2 text-white small">
+                            <span><i class="bi bi-translate text-warning me-2"></i>Select Language / ભાષા પસંદ કરો:</span>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('set_language', lang='en') }}" class="lang-switch-btn btn btn-xs {% if current_lang != 'gu' %}btn-warning text-dark fw-bold{% else %}btn-outline-secondary text-white{% endif %} py-0 px-2" data-lang="en" style="font-size: 0.75rem;">English</a>
+                                <a href="{{ url_for('set_language', lang='gu') }}" class="lang-switch-btn btn btn-xs {% if current_lang == 'gu' %}btn-warning text-dark fw-bold{% else %}btn-outline-secondary text-white{% endif %} py-0 px-2" data-lang="gu" style="font-size: 0.75rem;">ગુજરાતી</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show shadow-sm" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Dynamic Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 24x7 Helpdesk Emergency Strip -->
+    <section class="helpline-strip mt-5">
+        <div class="container text-center">
+            <div class="row align-items-center">
+                <div class="col-md-8 text-md-start mb-2 mb-md-0">
+                    <h5 class="mb-1 text-white fw-bold"><i class="bi bi-telephone-fill me-2"></i>{% if current_lang == 'gu' %}પોરબંદર જિલ્લા નાગરિક મફત કાનૂની સહાય હેલ્પલાઇન{% else %}Porbandar District Citizen Legal Aid Helpline{% endif %}</h5>
+                    <p class="mb-0 text-white-50 small">{% if current_lang == 'gu' %}પોરબંદર, છાયા, બોખીરા, રાણાવાવ, કુતિયાણા અને જામ રાવલના નાગરિકોની સેવામાં સમર્પિત.{% else %}Serving residents of Porbandar, Chhaya, Bokhira, Ranavav, Kutiyana, and Jam Raval.{% endif %}</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <span>{% if current_lang == 'gu' %}ટોલ-ફ્રી હેલ્પલાઇન:{% else %}Toll-Free Helpline:{% endif %}</span>
+                    <a href="tel:15100" class="helpline-number">15100</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Official Footer -->
+    <footer class="dlsa-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ url_for('static', filename='images/emblem.svg') }}" alt="Emblem" style="height: 48px;" class="me-2">
+                        <div>
+                            <div class="text-white fw-bold">{% if current_lang == 'gu' %}જિલ્લા કાનૂની સેવા સત્તા મંડળ, પોરબંદર{% else %}DLSA PORBANDAR{% endif %}</div>
+                            <small class="text-warning">જિલ્લા કાનૂની સેવા સત્તા મંડળ, પોરબંદર</small>
+                        </div>
+                    </div>
+                    <p class="small text-secondary mb-3">
+                        {% if current_lang == 'gu' %}બંધારણની કલમ ૩૯-એ હેઠળ પોરબંદર જિલ્લાના ગરીબ, વંચિતો, સાગરખેડૂ માછીમારો, મહિલાઓ, બાળકો અને કાચા કામના કેદીઓને નિઃશુલ્ક અને સક્ષમ કાનૂની સેવાઓ પહોંચાડવાનો બંધારણીય સંકલ્પ.{% else %}Constitutional mandate under Article 39A to guarantee free and competent legal services to the indigent, marginalized, coastal fishermen, women, children, and undertrial prisoners of Porbandar district.{% endif %}
+                    </p>
+                    <div class="small text-secondary">
+                        <div><i class="bi bi-building me-2 text-warning"></i>{% if current_lang == 'gu' %}જિલ્લા અદાલત સંકુલ, સાંદિપનિ રોડ, સેવા સદન - ૨ સામે, પોરબંદર - ૩૬૦૫૭૭{% else %}District Court Complex, Sandipani Road, Opp. Seva Sadan - 2, Porbandar - 360577{% endif %}</div>
+                        <div><i class="bi bi-telephone me-2 text-warning"></i>{% if current_lang == 'gu' %}ડીએલએસએ ફ્રન્ટ ઓફિસ: ૦૨૮૬-૨૨૨૨૦૨૪ / ૦૨૮૬-૨૨૪૪૨૪૪{% else %}DLSA Front Office: 0286-2222024 / 0286-2244244{% endif %}</div>
+                        <div><i class="bi bi-envelope me-2 text-warning"></i>dlsaporbandardc@gmail.com</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="dlsa-footer-title">{% if current_lang == 'gu' %}મુખ્ય મેનુ{% else %}Navigation{% endif %}</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="{{ url_for('index') }}">{% if current_lang == 'gu' %}મુખપૃષ્ઠ{% else %}Home{% endif %}</a></li>
+                        <li class="mb-2"><a href="{{ url_for('leadership') }}">{% if current_lang == 'gu' %}ન્યાયિક પદ અને અધિકારીઓ{% else %}Rank & Officers{% endif %}</a></li>
+                        <li class="mb-2"><a href="{{ url_for('plv_portal') }}">{% if current_lang == 'gu' %}પોરબંદર પીએલવી (૪૪){% else %}Porbandar PLVs (44){% endif %}</a></li>
+                        <li class="mb-2"><a href="{{ url_for('deployments') }}">{% if current_lang == 'gu' %}ક્લિનિક્સ & કેન્દ્રો{% else %}Clinics & Centers{% endif %}</a></li>
+                        <li class="mb-2"><a href="{{ url_for('schemes') }}">{% if current_lang == 'gu' %}કલ્યાણકારી યોજનાઓ{% else %}Welfare Schemes{% endif %}</a></li>
+                        <li class="mb-2"><a href="{{ url_for('apply_legal_aid') }}">{% if current_lang == 'gu' %}ઓનલાઇન અરજી{% else %}Apply Online{% endif %}</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="dlsa-footer-title">{% if current_lang == 'gu' %}સત્તાવાર સરકારી પોર્ટલ્સ{% else %}Official Portals{% endif %}</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="https://gslsa.gujarat.gov.in" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right me-1"></i>Gujarat State Legal Services Authority (GSLSA)</a></li>
+                        <li class="mb-2"><a href="https://nalsa.gov.in" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right me-1"></i>National Legal Services Authority (NALSA)</a></li>
+                        <li class="mb-2"><a href="https://gujarathighcourt.nic.in" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right me-1"></i>High Court of Gujarat</a></li>
+                        <li class="mb-2"><a href="https://porbandar.dcourts.gov.in" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right me-1"></i>District Court Porbandar</a></li>
+                        <li class="mb-2"><a href="https://ecourts.gov.in" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right me-1"></i>e-Courts Services Gujarat</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="dlsa-footer-title">Technology & Architecture</h6>
+                    <div class="p-3 rounded bg-dark border border-secondary small">
+                        <div class="text-warning fw-bold mb-1"><i class="bi bi-hdd-network me-1"></i>Architecture Stack</div>
+                        <div class="text-white-50">Jurisdiction: <span class="text-white">Porbandar, Gujarat</span></div>
+                        <div class="text-white-50">Backend: <span class="text-white">Python 3.14 (Flask)</span></div>
+                        <div class="text-white-50">Database: <span class="text-white">MS SQL Server (T-SQL)</span></div>
+                        <div class="text-white-50">Current Engine: <span class="badge bg-primary">{{ active_db }}</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary my-4">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center small text-secondary">
+                <div>&copy; 2026 District Legal Services Authority, Porbandar (Gujarat). All Rights Reserved.</div>
+                <div>Designed for Porbandar Public Legal Literacy & Citizen Assistance.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Main JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Google Translate Fallback Widget (Hidden, Auto-runs if needed) -->
+    <div id="google_translate_element" style="display:none;"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'gu,en',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

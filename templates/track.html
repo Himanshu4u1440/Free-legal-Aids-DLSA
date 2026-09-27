@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Track Legal Aid Application Status | DLSA{% endblock %}
+
+{% block content %}
+<div class="bg-navy text-white py-4" style="background: linear-gradient(135deg, #0284c7 0%, #0f2b48 100%);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active text-warning" aria-current="page">Track Status</li>
+            </ol>
+        </nav>
+        <h1 class="fw-bold mb-1"><i class="bi bi-search me-2"></i>Track Your Legal Aid Application</h1>
+        <p class="text-white-50 mb-0">Check the real-time status, assigned advocate, and scheduled hearings for your request</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Search Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <h4 class="fw-bold text-navy mb-3"><i class="bi bi-ticket-detailed me-2 text-primary"></i>Enter Application Tracking Number</h4>
+                <form method="GET" action="{{ url_for('track_application') }}" class="d-flex gap-2">
+                    <input type="text" name="app_no" value="{{ search_query or '' }}" class="form-control form-control-lg" placeholder="e.g. DLSA-2026-1001" required>
+                    <button type="submit" class="btn btn-primary btn-lg fw-bold px-4">
+                        <i class="bi bi-search me-1"></i>Track
+                    </button>
+                </form>
+                <div class="small text-muted mt-2">
+                    <i class="bi bi-info-circle me-1"></i>Tip: Your tracking number was provided on your submission screen (e.g. <code>DLSA-2026-1001</code>).
+                </div>
+            </div>
+
+            <!-- Result Card if found -->
+            {% if application %}
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-3">
+                    <div>
+                        <small class="text-muted text-uppercase fw-bold">Application Tracking Number</small>
+                        <h3 class="fw-bold text-navy mb-0">{{ application.application_number }}</h3>
+                    </div>
+                    <div>
+                        <span class="badge fs-6 px-3 py-2 
+                            {% if application.status == 'Counsel Assigned' %}bg-primary
+                            {% elif application.status == 'Disposed/Resolved' %}bg-success
+                            {% elif application.status == 'Mediation/Lok Adalat' %}bg-info text-dark
+                            {% elif application.status == 'Under Scrutiny' %}bg-warning text-dark
+                            {% elif application.status == 'Rejected' %}bg-danger
+                            {% else %}bg-secondary{% endif %}">
+                            <i class="bi bi-record-circle me-1"></i>{{ application.status }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Status Timeline / Stepper -->
+                <div class="p-3 bg-light rounded-3 mb-4 border">
+                    <h6 class="fw-bold text-navy mb-3"><i class="bi bi-diagram-2 me-1"></i>Lifecycle Progress:</h6>
+                    <div class="d-flex justify-content-between text-center small position-relative">
+                        <div class="text-success fw-bold">
+                            <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-1" style="width: 32px; height: 32px;">
+                                <i class="bi bi-check"></i>
+                            </div>
+                            <div>Submitted</div>
+                        </div>
+                        <div class="{% if application.status in ['Under Scrutiny', 'Counsel Assigned', 'Mediation/Lok Adalat', 'Disposed/Resolved'] %}text-success fw-bold{% else %}text-muted{% endif %}">
+                            <div class="rounded-circle {% if application.status in ['Under Scrutiny', 'Counsel Assigned', 'Mediation/Lok Adalat', 'Disposed/Resolved'] %}bg-success text-white{% else %}bg-secondary text-white-50{% endif %} d-inline-flex align-items-center justify-content-center mb-1" style="width: 32px; height: 32px;">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <div>Scrutiny</div>
+                        </div>
+                        <div class="{% if application.status in ['Counsel Assigned', 'Mediation/Lok Adalat', 'Disposed/Resolved'] %}text-success fw-bold{% else %}text-muted{% endif %}">
+                            <div class="rounded-circle {% if application.status in ['Counsel Assigned', 'Mediation/Lok Adalat', 'Disposed/Resolved'] %}bg-success text-white{% else %}bg-secondary text-white-50{% endif %} d-inline-flex align-items-center justify-content-center mb-1" style="width: 32px; height: 32px;">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                            <div>Advocate Assigned</div>
+                        </div>
+                        <div class="{% if application.status in ['Disposed/Resolved'] %}text-success fw-bold{% else %}text-muted{% endif %}">
+                            <div class="rounded-circle {% if application.status == 'Disposed/Resolved' %}bg-success text-white{% else %}bg-secondary text-white-50{% endif %} d-inline-flex align-items-center justify-content-center mb-1" style="width: 32px; height: 32px;">
+                                <i class="bi bi-trophy"></i>
+                            </div>
+                            <div>Resolved</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case & Assignment Information -->
+                <div class="row g-3 small">
+                    <div class="col-sm-6">
+                        <div class="text-muted">Applicant Name:</div>
+                        <div class="fw-bold text-navy fs-6">{{ application.applicant_name }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-muted">Contact Phone:</div>
+                        <div class="fw-bold text-navy">{{ application.phone }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-muted">Category Entitlement:</div>
+                        <span class="badge bg-secondary">{{ application.category }}</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-muted">Nature of Matter:</div>
+                        <span class="badge bg-primary">{{ application.case_type }}</span>
+                    </div>
+
+                    <div class="col-12">
+                        <hr class="my-1">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="text-muted fw-semibold">Assigned Free Defense Counsel:</div>
+                        <div class="fw-bold text-success fs-6 mt-1">
+                            {% if application.assigned_counsel %}
+                                <i class="bi bi-award-fill me-1"></i>{{ application.assigned_counsel }}
+                            {% else %}
+                                <span class="text-muted fw-normal">Under review by DLSA Secretary</span>
+                            {% endif %}
+                        </div>
+                        {% if application.assigned_counsel_phone %}
+                        <div class="mt-2">
+                            <span class="text-muted small d-block">Counsel Direct Contact Number:</span>
+                            <a href="tel:{{ application.assigned_counsel_phone }}" class="btn btn-sm btn-success fw-bold shadow-sm mt-1">
+                                <i class="bi bi-telephone-fill me-1"></i>Call Counsel: {{ application.assigned_counsel_phone }}
+                            </a>
+                        </div>
+                        {% elif application.assigned_counsel %}
+                        <div class="mt-1 small text-muted">
+                            <i class="bi bi-info-circle me-1"></i>Counsel direct phone number being updated by DLSA Secretariat.
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-muted fw-semibold">Assigned Para Legal Volunteer (PLV):</div>
+                        <div class="fw-bold text-primary mt-1">
+                            {% if application.assigned_plv %}
+                                <i class="bi bi-person-badge me-1"></i>DLSA Sr. No. {{ application.assigned_plv.dlsa_sr_no }} - {{ application.assigned_plv.full_name }} ({{ application.assigned_plv.current_deployment }})
+                            {% else %}
+                                <span class="text-muted fw-normal">DLSA Central Front Office Desk</span>
+                            {% endif %}
+                        </div>
+                        <div class="small text-muted mt-2">
+                            <i class="bi bi-shield-check me-1 text-success"></i>PLV volunteer deployed for non-legal guidance and document intake.
+                        </div>
+                    </div>
+
+                    {% if application.status_notes %}
+                    <div class="col-12 mt-2">
+                        <div class="text-muted fw-semibold">Official DLSA Status Remarks:</div>
+                        <div class="p-3 bg-light rounded-3 text-secondary border">
+                            {{ application.status_notes }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Official DLSA SMS Notification & Dispatch Log -->
+                    <div class="col-12 mt-3">
+                        <div class="card border-0 bg-light rounded-3 p-3 border-start border-4 border-info shadow-sm">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="fw-bold text-navy small">
+                                    <i class="bi bi-chat-text-fill text-info me-1"></i>Official DLSA SMS Updates Sent to Registered Mobile
+                                </div>
+                                <span class="badge bg-success-subtle text-success border border-success small">
+                                    <i class="bi bi-broadcast me-1"></i>Gateway Active
+                                </span>
+                            </div>
+                            <div class="small text-muted mb-2">
+                                SMS dispatched to registered mobile: <strong class="text-navy">+91 {{ application.phone }}</strong>
+                            </div>
+                            {% if application.last_sms_notification %}
+                            <div class="p-3 bg-white rounded-3 border">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge bg-primary text-white" style="font-size: 0.75rem;">
+                                        <i class="bi bi-check-all me-1"></i>Delivered via DLSA-SMS
+                                    </span>
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock me-1"></i>{{ application.last_sms_sent_at.strftime('%d %b %Y, %I:%M %p') if application.last_sms_sent_at else 'Recent' }}
+                                    </small>
+                                </div>
+                                <div class="text-dark font-monospace small mt-2 p-2 bg-light rounded">
+                                    "{{ application.last_sms_notification }}"
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="p-2 bg-white rounded border small text-muted">
+                                <i class="bi bi-hourglass-split me-1"></i>SMS confirmation was dispatched upon submission. Further status updates (Scrutiny, Counsel Assignment, Disposal) will automatically arrive on <strong>{{ application.phone }}</strong>.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elif search_query %}
+            <div class="alert alert-warning border-warning rounded-4 shadow-sm p-4 text-center">
+                <i class="bi bi-exclamation-triangle-fill fs-2 text-warning mb-2 d-block"></i>
+                <h5 class="fw-bold">No application found matching "{{ search_query }}"</h5>
+                <p class="small text-muted mb-0">Please verify the application number and try again, or call the DLSA Porbandar Front Office Helpline at <strong>0286-2244222</strong>.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

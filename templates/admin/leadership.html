@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Leadership & High Ranks | DLSA Admin{% endblock %}
+
+{% block content %}
+<div class="bg-navy text-white py-3" style="background: #0f2b48;">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h4 class="fw-bold mb-0"><i class="bi bi-diagram-3-fill me-2 text-warning"></i>Manage Leadership & High Ranks</h4>
+            <small class="text-white-50">Manage Judicial Officers, Defense Counsel, and DLSA Executive Members</small>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-2 mt-md-0">
+            <button class="btn btn-warning fw-bold text-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOfficialModal">
+                <i class="bi bi-person-plus-fill me-1"></i>Add Official / Rank
+            </button>
+            <a href="{{ url_for('admin_camps') }}" class="btn btn-outline-light btn-sm"><i class="bi bi-calendar-event me-1"></i>Manage Camps</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light btn-sm"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small text-uppercase text-muted">
+                    <tr>
+                        <th class="ps-4">Rank Order</th>
+                        <th>Official Name & Designation</th>
+                        <th>Category</th>
+                        <th>Chamber / Office</th>
+                        <th>Contact</th>
+                    </tr>
+                </thead>
+                <tbody class="small">
+                    {% for m in members %}
+                    <tr>
+                        <td class="ps-4">
+                            <span class="badge bg-navy text-white px-2 py-1">Order #{{ m.rank_order }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="{{ m.photo_url }}" alt="{{ m.name }}" class="rounded-circle me-3" style="width: 44px; height: 44px; object-fit: cover; border: 2px solid #c59b27;">
+                                <div>
+                                    <div class="fw-bold text-navy fs-6">{{ m.name }}</div>
+                                    <small class="text-muted">{{ m.designation }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary-subtle text-primary border border-primary">{{ m.category }}</span>
+                        </td>
+                        <td>
+                            <div>{{ m.office_address }}</div>
+                        </td>
+                        <td>
+                            <div><i class="bi bi-telephone me-1 text-success"></i>{{ m.phone }}</div>
+                            <small class="text-muted">{{ m.email }}</small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to Add Official -->
+<div class="modal fade" id="addOfficialModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('admin_add_member') }}">
+                <div class="modal-header bg-navy text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-person-badge me-2"></i>Add Official / Executive Rank</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Official Full Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" required placeholder="e.g. Shri Rajesh Verma">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Hierarchy Rank Order <span class="text-danger">*</span></label>
+                            <input type="number" name="rank_order" class="form-control" value="6" required min="1">
+                        </div>
+
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Official Designation <span class="text-danger">*</span></label>
+                            <input type="text" name="designation" class="form-control" required placeholder="e.g. Additional Secretary / Senior Advocate">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
+                            <select name="category" class="form-select" required>
+                                <option value="Judicial Leadership">Judicial Leadership</option>
+                                <option value="Administration">Administration</option>
+                                <option value="Legal Aid Defense Counsel">Legal Aid Defense Counsel</option>
+                                <option value="Panel Advocates">Panel Advocates</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Educational & Legal Qualifications</label>
+                            <input type="text" name="qualification" class="form-control" placeholder="e.g. LL.M., Higher Judicial Service">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Chamber / Office Address</label>
+                            <input type="text" name="office_address" class="form-control" placeholder="Chamber No., District Court">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Official Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="official@dlsa.gov.in">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Official Phone</label>
+                            <input type="tel" name="phone" class="form-control" placeholder="011-XXXXXXXX">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Professional Profile & Background</label>
+                            <textarea name="bio" class="form-control" rows="2" placeholder="Brief biography of service..."></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Statutory Duties & Key Responsibilities <span class="text-danger">*</span></label>
+                            <textarea name="responsibilities" class="form-control" rows="3" required placeholder="Detail key powers and duties..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary fw-bold">Save Official</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

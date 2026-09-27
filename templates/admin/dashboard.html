@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}DLSA Management Dashboard{% endblock %}
+
+{% block content %}
+<div class="bg-navy text-white py-3" style="background: #0f2b48;">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h4 class="fw-bold mb-0"><i class="bi bi-speedometer2 me-2 text-warning"></i>DLSA Administration Dashboard</h4>
+            <small class="text-white-50">Welcome, {{ session.get('admin_name', 'DLSA Staff') }} ({{ session.get('admin_role', 'Admin') }})</small>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-2 mt-md-0">
+            <a href="{{ url_for('admin_plvs') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-people me-1"></i>Manage PLVs</a>
+            <a href="{{ url_for('admin_deployments') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-geo-alt me-1"></i>Manage Places</a>
+            <a href="{{ url_for('admin_leadership') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-diagram-3 me-1"></i>Manage Ranks</a>
+            <a href="{{ url_for('admin_camps') }}" class="btn btn-sm btn-outline-light"><i class="bi bi-calendar-event me-1"></i>Manage Camps</a>
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-sm btn-danger"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Top Metrics Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white border-start border-primary border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Legal Aid Requests</div>
+                        <h3 class="fw-bold text-navy mb-0">{{ applications|length }}</h3>
+                    </div>
+                    <div class="bg-primary text-white p-3 rounded-circle">
+                        <i class="bi bi-file-earmark-text fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white border-start border-warning border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Pending Scrutiny</div>
+                        <h3 class="fw-bold text-warning mb-0">
+                            {{ applications | selectattr('status', 'equalto', 'Submitted') | list | length }}
+                        </h3>
+                    </div>
+                    <div class="bg-warning text-dark p-3 rounded-circle">
+                        <i class="bi bi-hourglass-split fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white border-start border-success border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Enrolled PLVs</div>
+                        <h3 class="fw-bold text-success mb-0">{{ plvs_count }}</h3>
+                    </div>
+                    <div class="bg-success text-white p-3 rounded-circle">
+                        <i class="bi bi-people fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white border-start border-info border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Deployed Places</div>
+                        <h3 class="fw-bold text-info mb-0">{{ deployments_count }}</h3>
+                    </div>
+                    <div class="bg-info text-white p-3 rounded-circle">
+                        <i class="bi bi-geo-alt fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legal Aid Applications Management Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+        <div class="card-header bg-white p-4 border-bottom d-flex flex-wrap justify-content-between align-items-center">
+            <div>
+                <h5 class="fw-bold text-navy mb-0"><i class="bi bi-inbox-fill me-2 text-primary"></i>Citizen Legal Aid Applications</h5>
+                <small class="text-muted">Review, verify, assign panel advocate, and update case progress</small>
+            </div>
+            <div class="badge bg-secondary">Total: {{ applications|length }} cases</div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small text-uppercase text-muted">
+                    <tr>
+                        <th class="ps-4">App # & Date</th>
+                        <th>Applicant</th>
+                        <th>Category</th>
+                        <th>Issue / Court</th>
+                        <th>Assigned Counsel</th>
+                        <th>Assigned PLV</th>
+                        <th>Status</th>
+                        <th class="pe-4 text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="small">
+                    {% for app in applications %}
+                    <tr>
+                        <td class="ps-4">
+                            <span class="fw-bold text-navy">{{ app.application_number }}</span>
+                            <div class="text-muted x-small">{{ app.submitted_at.strftime('%d %b %Y') if app.submitted_at else '' }}</div>
+                        </td>
+                        <td>
+                            <div class="fw-bold">{{ app.applicant_name }}</div>
+                            <div class="text-muted">{{ app.phone }}</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">{{ app.category }}</span>
+                        </td>
+                        <td>
+                            <div class="fw-semibold text-primary">{{ app.case_type }}</div>
+                            <small class="text-muted">{{ app.court_jurisdiction or 'District Courts' }}</small>
+                        </td>
+                        <td>
+                            {% if app.assigned_counsel %}
+                                <div><span class="badge bg-success-subtle text-success border border-success">{{ app.assigned_counsel }}</span></div>
+                                {% if app.assigned_counsel_phone %}
+                                <div class="small mt-1"><a href="tel:{{ app.assigned_counsel_phone }}" class="text-decoration-none text-success fw-semibold"><i class="bi bi-telephone-fill me-1"></i>{{ app.assigned_counsel_phone }}</a></div>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted italic">Unassigned</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if app.assigned_plv %}
+                                <span class="badge bg-primary-subtle text-primary border border-primary">
+                                    DLSA Sr. No. {{ app.assigned_plv.dlsa_sr_no }} - {{ app.assigned_plv.full_name }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted italic">None</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge 
+                                {% if app.status == 'Counsel Assigned' %}bg-primary
+                                {% elif app.status == 'Disposed/Resolved' %}bg-success
+                                {% elif app.status == 'Mediation/Lok Adalat' %}bg-info text-dark
+                                {% elif app.status == 'Under Scrutiny' %}bg-warning text-dark
+                                {% elif app.status == 'Rejected' %}bg-danger
+                                {% else %}bg-secondary{% endif %}">
+                                {{ app.status }}
+                            </span>
+                            {% if app.last_sms_sent_at %}
+                            <div class="small text-muted mt-1" title="{{ app.last_sms_notification }}">
+                                <i class="bi bi-chat-check-fill text-success me-1"></i><span style="font-size: 0.75rem;">SMS Sent</span>
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td class="pe-4 text-end">
+                            <button class="btn btn-sm btn-outline-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#editModal{{ app.id }}">
+                                <i class="bi bi-pencil-square me-1"></i>Manage
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Application Modal -->
+                    <div class="modal fade text-start" id="editModal{{ app.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <form method="POST" action="{{ url_for('admin_update_application', app_id=app.id) }}">
+                                    <div class="modal-header bg-navy text-white">
+                                        <h5 class="modal-title fw-bold">Case Review: {{ app.application_number }}</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body p-4">
+                                        <div class="p-3 bg-light rounded-3 mb-3 border">
+                                            <div class="row g-2">
+                                                <div class="col-sm-6"><strong>Applicant:</strong> {{ app.applicant_name }} ({{ app.gender }}, Ph: {{ app.phone }})</div>
+                                                <div class="col-sm-6"><strong>Category:</strong> {{ app.category }} (Income: ₹{{ app.annual_income or 'N/A' }})</div>
+                                                <div class="col-12 mt-2"><strong>Address:</strong> {{ app.residential_address }}</div>
+                                                <div class="col-12 mt-2"><strong>Case Summary:</strong> {{ app.case_summary }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">Application Status</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="Submitted" {% if app.status == 'Submitted' %}selected{% endif %}>Submitted</option>
+                                                    <option value="Under Scrutiny" {% if app.status == 'Under Scrutiny' %}selected{% endif %}>Under Scrutiny</option>
+                                                    <option value="Counsel Assigned" {% if app.status == 'Counsel Assigned' %}selected{% endif %}>Counsel Assigned</option>
+                                                    <option value="Mediation/Lok Adalat" {% if app.status == 'Mediation/Lok Adalat' %}selected{% endif %}>Mediation/Lok Adalat</option>
+                                                    <option value="Disposed/Resolved" {% if app.status == 'Disposed/Resolved' %}selected{% endif %}>Disposed/Resolved</option>
+                                                    <option value="Rejected" {% if app.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">Assign Para Legal Volunteer (PLV)</label>
+                                                <select name="assigned_plv_id" class="form-select">
+                                                    <option value="">-- No PLV Assigned --</option>
+                                                    {% for plv in all_plvs %}
+                                                    <option value="{{ plv.id }}" {% if app.assigned_plv_id == plv.id %}selected{% endif %}>
+                                                        DLSA Sr. No. {{ plv.dlsa_sr_no }} - {{ plv.full_name }} ({{ plv.current_deployment }}){% if plv.phone %} | Mo: {{ plv.phone }}{% endif %}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold"><i class="bi bi-person-badge me-1 text-primary"></i>Assign Free Defense Counsel</label>
+                                                <input type="text" name="assigned_counsel" value="{{ app.assigned_counsel or '' }}" class="form-control" placeholder="e.g. Adv. Harishchandra Joshi">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold"><i class="bi bi-telephone-fill me-1 text-success"></i>Counsel Contact Number (Shared with Citizen)</label>
+                                                <input type="text" name="assigned_counsel_phone" value="{{ app.assigned_counsel_phone or '' }}" class="form-control" placeholder="e.g. 98250 87654 / 0286-224455">
+                                                <div class="form-text small">Visible on citizen tracking page for direct legal consultation.</div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold">Administrative Remarks / Action Notes</label>
+                                                <textarea name="status_notes" class="form-control" rows="3" placeholder="Enter notes visible to applicant on the tracking portal...">{{ app.status_notes or '' }}</textarea>
+                                            </div>
+
+                                            <!-- SMS Gateway Notification Dispatch Panel -->
+                                            <div class="col-12">
+                                                <div class="p-3 bg-light rounded-3 border">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <span class="fw-bold text-navy small"><i class="bi bi-broadcast text-primary me-1"></i>Automated Citizen SMS Gateway Notification:</span>
+                                                        {% if app.last_sms_sent_at %}
+                                                        <span class="badge bg-success-subtle text-success border border-success small"><i class="bi bi-check-circle me-1"></i>Last SMS: {{ app.last_sms_sent_at.strftime('%d %b %Y, %I:%M %p') }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="small text-muted mb-2">Changing status to <strong>Under Scrutiny</strong>, <strong>Counsel Assigned</strong>, or <strong>Disposed/Resolved</strong> automatically dispatches an SMS to <strong>+91 {{ app.phone }}</strong>.</div>
+                                                    {% if app.last_sms_notification %}
+                                                    <div class="p-2 bg-white rounded border small font-monospace text-secondary">
+                                                        <strong>Last Dispatched SMS:</strong> "{{ app.last_sms_notification }}"
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary fw-bold"><i class="bi bi-save me-1"></i>Save Changes & Dispatch SMS</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

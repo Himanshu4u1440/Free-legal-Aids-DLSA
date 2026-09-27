@@ -1,0 +1,714 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Para Legal Volunteers (PLVs) | DLSA Porbandar Admin{% endblock %}
+
+{% block content %}
+<div class="bg-navy text-white py-3" style="background: #0f2b48;">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <h4 class="fw-bold mb-0"><i class="bi bi-people-fill me-2 text-warning"></i>DLSA Porbandar PLV Administration</h4>
+            <small class="text-white-50">Private Contact Information, Active/Inactive Status Management & Center Allocation</small>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-2 mt-md-0">
+            <button class="btn btn-warning fw-bold text-dark btn-sm shadow-sm" data-bs-toggle="modal" data-bs-target="#addPLVModal">
+                <i class="bi bi-person-plus-fill me-1"></i>Enroll New PLV
+            </button>
+            <a href="{{ url_for('admin_camps') }}" class="btn btn-outline-light btn-sm"><i class="bi bi-calendar-event me-1"></i>Manage Camps</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light btn-sm"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Top Summary Counter Strip -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-3 p-2 p-sm-3 bg-white border-start border-primary border-4 h-100">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted text-uppercase fw-semibold d-block text-truncate" style="font-size: 0.72rem;">Total Certified</small>
+                        <h3 class="fw-bold text-navy mb-0 fs-4 fs-sm-3">{{ plvs|length }}</h3>
+                    </div>
+                    <div class="bg-primary-subtle text-primary p-2 p-sm-3 rounded-circle d-none d-sm-block">
+                        <i class="bi bi-people fs-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-3 p-2 p-sm-3 bg-white border-start border-success border-4 h-100">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted text-uppercase fw-semibold d-block text-truncate" style="font-size: 0.72rem;">Active PLVs</small>
+                        <h3 class="fw-bold text-success mb-0 fs-4 fs-sm-3">{{ active_plvs|length }}</h3>
+                    </div>
+                    <div class="bg-success-subtle text-success p-2 p-sm-3 rounded-circle d-none d-sm-block">
+                        <i class="bi bi-check2-circle fs-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-3 p-2 p-sm-3 bg-white border-start border-danger border-4 h-100">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted text-uppercase fw-semibold d-block text-truncate" style="font-size: 0.72rem;">Inactive / Leave</small>
+                        <h3 class="fw-bold text-danger mb-0 fs-4 fs-sm-3">{{ inactive_plvs|length }}</h3>
+                    </div>
+                    <div class="bg-danger-subtle text-danger p-2 p-sm-3 rounded-circle d-none d-sm-block">
+                        <i class="bi bi-pause-circle fs-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-3 p-2 p-sm-3 bg-white border-start border-warning border-4 h-100">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted text-uppercase fw-semibold d-block text-truncate" style="font-size: 0.72rem;">Porbandar Centers</small>
+                        <h3 class="fw-bold text-warning mb-0 fs-4 fs-sm-3">{{ deployments|length }}</h3>
+                    </div>
+                    <div class="bg-warning-subtle text-warning p-2 p-sm-3 rounded-circle d-none d-sm-block">
+                        <i class="bi bi-geo-alt fs-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Administrative Column / Managed Views -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+        <!-- Integrated Table Card Header: Navigation Tabs + Live Search & Gender Selection Directly Up on the Table -->
+        <div class="card-header bg-white p-3 border-bottom">
+            <!-- Navigation Tabs for Columns -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <ul class="nav nav-pills" id="plvManageTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-semibold" id="active-tab" data-bs-toggle="tab" data-bs-target="#tabActive" type="button" role="tab">
+                            <i class="bi bi-check-circle-fill me-1 text-success"></i>Active PLVs ({{ active_plvs|length }})
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-semibold" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#tabInactive" type="button" role="tab">
+                            <i class="bi bi-pause-circle-fill me-1 text-danger"></i>Inactive PLVs ({{ inactive_plvs|length }})
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-semibold" id="all-tab" data-bs-toggle="tab" data-bs-target="#tabAll" type="button" role="tab">
+                            <i class="bi bi-table me-1 text-primary"></i>All 44 PLVs Master List
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="small text-muted">
+                    <i class="bi bi-info-circle me-1 text-primary"></i>Click <strong>Manage</strong> next to deployment center to update volunteer details.
+                </div>
+            </div>
+
+            <!-- Integrated Search Bar & Gender Selection Up on the Table -->
+            <div class="bg-light p-2 p-md-3 rounded-3 border">
+                <div class="row g-2 align-items-center">
+                    <div class="col-12 col-md-7 col-lg-8">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 text-primary">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" id="adminPlvSearch" class="form-control bg-white border-start-0 ps-0" placeholder="Search PLVs by Name, DLSA Sr. No., Phone, Center, Address, or Reg No...">
+                            <button class="btn btn-outline-secondary" type="button" id="clearSearchBtn" title="Clear Search">
+                                <i class="bi bi-x-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5 col-lg-4">
+                        <div class="d-flex align-items-center gap-2">
+                            <label for="adminGenderFilter" class="form-label mb-0 fw-bold text-navy text-nowrap small">
+                                <i class="bi bi-gender-ambiguous text-primary me-1"></i>Gender:
+                            </label>
+                            <select id="adminGenderFilter" class="form-select fw-semibold border-primary-subtle shadow-sm">
+                                <option value="all" selected>All Genders (Both Male & Female)</option>
+                                <option value="Male">Male Volunteers</option>
+                                <option value="Female">Female Volunteers</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top x-small text-muted">
+                    <div id="filterStatusText">
+                        <i class="bi bi-funnel-fill text-primary me-1"></i>Showing all certified volunteers across active, inactive, and master lists.
+                    </div>
+                    <div id="activeFilterBadge" class="d-none">
+                        <span class="badge bg-primary-subtle text-primary">Filter Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content p-3" id="plvManageTabsContent">
+            <!-- COLUMN 1: ACTIVE PLVs -->
+            <div class="tab-pane fade show active" id="tabActive" role="tabpanel">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 p-3 bg-light rounded-3 border">
+                    <div>
+                        <h6 class="fw-bold text-navy mb-0"><i class="bi bi-check-circle-fill me-2 text-success"></i>Active Volunteers Roster ({{ active_plvs|length }})</h6>
+                        <small class="text-muted">Volunteers currently available for DLSA Porbandar citizen case allocation</small>
+                    </div>
+                    <div class="mt-2 mt-sm-0">
+                        {% if active_plvs %}
+                        <form method="POST" action="{{ url_for('admin_mark_all_plvs_inactive') }}" class="d-inline" onsubmit="return confirm('Are you sure you want to mark ALL active PLVs as INACTIVE?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger fw-bold shadow-sm">
+                                <i class="bi bi-pause-circle-fill me-1"></i>Mark All PLVs as Inactive
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small text-uppercase text-muted">
+                            <tr>
+                                <th class="ps-3" style="width: 120px;">DLSA Sr. No.</th>
+                                <th>Volunteer Name</th>
+                                <th>Gender</th>
+                                <th>Private Contact (Phone)</th>
+                                <th>Residential Address in Porbandar</th>
+                                <th style="width: 270px; min-width: 260px;">Assigned Center</th>
+                                <th>Status</th>
+                                <th class="text-end pe-3" style="min-width: 130px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            {% for plv in active_plvs %}
+                            <tr class="plv-row" data-gender="{{ plv.gender }}" data-status="{{ plv.status }}" data-search="{{ plv.full_name|lower }} {{ plv.dlsa_sr_no }} {{ plv.registration_no|lower }} {{ plv.phone }} {{ plv.residential_address|lower }} {{ plv.current_deployment|lower }} {{ plv.gender|lower }}">
+                                <td class="ps-3 fw-bold text-navy">
+                                    No. {{ plv.dlsa_sr_no }}
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-navy">{{ plv.full_name }}</div>
+                                    <div class="text-muted font-monospace" style="font-size: 0.72rem;">{{ plv.registration_no }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge {% if plv.gender == 'Female' %}bg-danger-subtle text-danger border border-danger-subtle{% else %}bg-primary-subtle text-primary border border-primary-subtle{% endif %} px-2 py-1">
+                                        <i class="bi {% if plv.gender == 'Female' %}bi-gender-female{% else %}bi-gender-male{% endif %} me-1"></i>{{ plv.gender }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="tel:{{ plv.phone.split('/')[0].strip() }}" class="text-decoration-none fw-bold text-success">
+                                        <i class="bi bi-telephone-fill me-1"></i>{{ plv.phone }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="text-secondary small" style="max-width: 250px;">
+                                        <i class="bi bi-house-door me-1 text-muted"></i>{{ plv.residential_address }}
+                                    </div>
+                                </td>
+                                <td style="width: 270px; min-width: 260px;">
+                                    <div class="d-flex align-items-center justify-content-between p-1 px-2 bg-light rounded border shadow-sm w-100" style="max-width: 260px;">
+                                        <span class="small fw-semibold text-primary text-truncate me-2" title="{{ plv.current_deployment }}">
+                                            <i class="bi bi-building me-1 text-primary"></i>{{ plv.current_deployment }}
+                                        </span>
+                                        <button type="button" class="btn btn-sm btn-primary fw-semibold py-1 px-2 text-nowrap shadow-sm flex-shrink-0" data-bs-toggle="modal" data-bs-target="#manageModal{{ plv.id }}" title="Manage {{ plv.full_name }}">
+                                            <i class="bi bi-pencil-square me-1"></i>Manage
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-status-active">
+                                        <i class="bi bi-record-fill me-1"></i>Active
+                                    </span>
+                                </td>
+                                <td class="text-end pe-3">
+                                    <form method="POST" action="{{ url_for('admin_toggle_plv_status', plv_id=plv.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2 fw-semibold" title="Set Inactive">
+                                            <i class="bi bi-pause-circle me-1"></i>Set Inactive
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="no-filter-match-row d-none">
+                                <td colspan="8" class="text-center text-muted py-4">
+                                    <i class="bi bi-person-x fs-3 d-block text-secondary mb-1"></i>
+                                    No active volunteers matching the search or gender criteria.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- COLUMN 2: INACTIVE PLVs -->
+            <div class="tab-pane fade" id="tabInactive" role="tabpanel">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 p-3 bg-light rounded-3 border">
+                    <div>
+                        <h6 class="fw-bold text-navy mb-0"><i class="bi bi-pause-circle-fill me-2 text-danger"></i>Inactive Volunteers ({{ inactive_plvs|length }})</h6>
+                        <small class="text-muted">Volunteers currently on leave or unallocated</small>
+                    </div>
+                    <div class="mt-2 mt-sm-0">
+                        {% if inactive_plvs %}
+                        <form method="POST" action="{{ url_for('admin_mark_all_plvs_active') }}" class="d-inline" onsubmit="return confirm('Are you sure you want to activate ALL inactive PLVs?');">
+                            <button type="submit" class="btn btn-sm btn-outline-success fw-bold shadow-sm">
+                                <i class="bi bi-check-circle-fill me-1"></i>Mark All PLVs as Active
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if inactive_plvs %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small text-uppercase text-muted">
+                            <tr>
+                                <th class="ps-3" style="width: 120px;">DLSA Sr. No.</th>
+                                <th>Volunteer Name</th>
+                                <th>Gender</th>
+                                <th>Private Contact (Phone)</th>
+                                <th>Residential Address</th>
+                                <th style="width: 270px; min-width: 260px;">Assigned Center</th>
+                                <th>Status</th>
+                                <th class="text-end pe-3" style="min-width: 130px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            {% for plv in inactive_plvs %}
+                            <tr class="plv-row" data-gender="{{ plv.gender }}" data-status="{{ plv.status }}" data-search="{{ plv.full_name|lower }} {{ plv.dlsa_sr_no }} {{ plv.registration_no|lower }} {{ plv.phone }} {{ plv.residential_address|lower }} {{ plv.current_deployment|lower }} {{ plv.gender|lower }}">
+                                <td class="ps-3 fw-bold text-muted">
+                                    No. {{ plv.dlsa_sr_no }}
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-muted">{{ plv.full_name }}</div>
+                                    <div class="text-muted font-monospace" style="font-size: 0.72rem;">{{ plv.registration_no }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge {% if plv.gender == 'Female' %}bg-danger-subtle text-danger border border-danger-subtle{% else %}bg-primary-subtle text-primary border border-primary-subtle{% endif %} px-2 py-1">
+                                        <i class="bi {% if plv.gender == 'Female' %}bi-gender-female{% else %}bi-gender-male{% endif %} me-1"></i>{{ plv.gender }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="tel:{{ plv.phone.split('/')[0].strip() }}" class="text-decoration-none text-muted">
+                                        <i class="bi bi-telephone me-1"></i>{{ plv.phone }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="text-secondary small">{{ plv.residential_address }}</div>
+                                </td>
+                                <td style="width: 270px; min-width: 260px;">
+                                    <div class="d-flex align-items-center justify-content-between p-1 px-2 bg-light rounded border shadow-sm w-100" style="max-width: 260px;">
+                                        <span class="small fw-semibold text-muted text-truncate me-2" title="{{ plv.current_deployment }}">
+                                            <i class="bi bi-building me-1 text-muted"></i>{{ plv.current_deployment }}
+                                        </span>
+                                        <button type="button" class="btn btn-sm btn-primary fw-semibold py-1 px-2 text-nowrap shadow-sm flex-shrink-0" data-bs-toggle="modal" data-bs-target="#manageModal{{ plv.id }}" title="Manage {{ plv.full_name }}">
+                                            <i class="bi bi-pencil-square me-1"></i>Manage
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary text-white">
+                                        <i class="bi bi-pause-fill me-1"></i>Inactive / On-Leave
+                                    </span>
+                                </td>
+                                <td class="text-end pe-3">
+                                    <form method="POST" action="{{ url_for('admin_toggle_plv_status', plv_id=plv.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-success py-1 px-2 fw-semibold" title="Set Active">
+                                            <i class="bi bi-check-circle me-1"></i>Activate
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="no-filter-match-row d-none">
+                                <td colspan="8" class="text-center text-muted py-4">
+                                    <i class="bi bi-person-x fs-3 d-block text-secondary mb-1"></i>
+                                    No inactive volunteers matching the search or gender criteria.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="p-4 text-center text-muted">
+                    <i class="bi bi-check-circle-fill text-success fs-2 mb-2 d-block"></i>
+                    All 44 Porbandar Para Legal Volunteers are currently <strong>Active and on-duty</strong>!
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- COLUMN 3: MASTER LIST (ALL PLVs) -->
+            <div class="tab-pane fade" id="tabAll" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small text-uppercase text-muted">
+                            <tr>
+                                <th class="ps-3" style="width: 120px;">DLSA Sr. No.</th>
+                                <th>PLV Full Name</th>
+                                <th>Gender</th>
+                                <th>Private Phone</th>
+                                <th>Private Address</th>
+                                <th style="width: 270px; min-width: 260px;">Assigned Center</th>
+                                <th>Card Validity</th>
+                                <th>Status</th>
+                                <th class="text-end pe-3" style="min-width: 130px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            {% for plv in plvs %}
+                            <tr class="plv-row" data-gender="{{ plv.gender }}" data-status="{{ plv.status }}" data-search="{{ plv.full_name|lower }} {{ plv.dlsa_sr_no }} {{ plv.registration_no|lower }} {{ plv.phone }} {{ plv.residential_address|lower }} {{ plv.current_deployment|lower }} {{ plv.gender|lower }}">
+                                <td class="ps-3 fw-bold text-navy">No. {{ plv.dlsa_sr_no }}</td>
+                                <td>
+                                    <div class="fw-bold text-navy">{{ plv.full_name }}</div>
+                                    <div class="text-muted font-monospace" style="font-size: 0.72rem;">{{ plv.registration_no }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge {% if plv.gender == 'Female' %}bg-danger-subtle text-danger border border-danger-subtle{% else %}bg-primary-subtle text-primary border border-primary-subtle{% endif %} px-2 py-1">
+                                        <i class="bi {% if plv.gender == 'Female' %}bi-gender-female{% else %}bi-gender-male{% endif %} me-1"></i>{{ plv.gender }}
+                                    </span>
+                                </td>
+                                <td><strong class="text-success">{{ plv.phone }}</strong></td>
+                                <td><small class="text-secondary">{{ plv.residential_address }}</small></td>
+                                <td style="width: 270px; min-width: 260px;">
+                                    <div class="d-flex align-items-center justify-content-between p-1 px-2 bg-light rounded border shadow-sm w-100" style="max-width: 260px;">
+                                        <span class="small fw-semibold text-primary text-truncate me-2" title="{{ plv.current_deployment }}">
+                                            <i class="bi bi-building me-1 text-primary"></i>{{ plv.current_deployment }}
+                                        </span>
+                                        <button type="button" class="btn btn-sm btn-primary fw-semibold py-1 px-2 text-nowrap shadow-sm flex-shrink-0" data-bs-toggle="modal" data-bs-target="#manageModal{{ plv.id }}" title="Manage {{ plv.full_name }}">
+                                            <i class="bi bi-pencil-square me-1"></i>Manage
+                                        </button>
+                                    </div>
+                                </td>
+                                <td><small class="text-muted">{{ plv.validity_date }}</small></td>
+                                <td>
+                                    <span class="badge {% if plv.status == 'Active' %}badge-status-active{% else %}bg-secondary{% endif %}">
+                                        {{ plv.status }}
+                                    </span>
+                                </td>
+                                <td class="text-end pe-3">
+                                    <form method="POST" action="{{ url_for('admin_toggle_plv_status', plv_id=plv.id) }}" class="d-inline">
+                                        {% if plv.status == 'Active' %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2 fw-semibold" title="Set Inactive">
+                                            <i class="bi bi-pause-circle me-1"></i>Set Inactive
+                                        </button>
+                                        {% else %}
+                                        <button type="submit" class="btn btn-sm btn-success py-1 px-2 fw-semibold" title="Set Active">
+                                            <i class="bi bi-check-circle me-1"></i>Activate
+                                        </button>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="no-filter-match-row d-none">
+                                <td colspan="9" class="text-center text-muted py-4">
+                                    <i class="bi bi-person-x fs-3 d-block text-secondary mb-1"></i>
+                                    No volunteers matching the search or gender criteria in master list.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================================= -->
+<!-- MANAGE PLV MODALS (ONE FOR EACH PLV) -->
+<!-- ========================================================================= -->
+{% for plv in plvs %}
+<div class="modal fade" id="manageModal{{ plv.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <form method="POST" action="{{ url_for('admin_update_plv', plv_id=plv.id) }}">
+                <div class="modal-header bg-navy text-white p-3" style="background: #0f2b48;">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ plv.photo_url }}" alt="{{ plv.full_name }}" class="rounded-circle me-3 border border-2 border-warning" style="width: 48px; height: 48px; object-fit: cover;">
+                        <div>
+                            <h5 class="modal-title fw-bold mb-0">Manage PLV: {{ plv.full_name }}</h5>
+                            <small class="text-warning">DLSA Sr. No. : {{ plv.dlsa_sr_no }} • {{ plv.registration_no }}</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-white">
+                    <!-- Status Switcher -->
+                    <div class="p-3 bg-light rounded-3 border mb-4">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center">
+                            <div>
+                                <label class="form-label fw-bold text-navy mb-0">Roster Status (Duty Availability):</label>
+                                <div class="x-small text-muted">Active PLVs can be allocated to incoming citizen requests.</div>
+                            </div>
+                            <div class="mt-2 mt-sm-0">
+                                <select name="status" class="form-select fw-bold {% if plv.status == 'Active' %}text-success border-success{% else %}text-danger border-danger{% endif %}" style="width: auto;">
+                                    <option value="Active" {% if plv.status == 'Active' %}selected{% endif %}>🟢 Active (On-Duty / Ready for Allocation)</option>
+                                    <option value="Inactive" {% if plv.status != 'Active' %}selected{% endif %}>🔴 Inactive / On-Leave</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Private Contact and Address Details -->
+                    <h6 class="fw-bold text-primary mb-3"><i class="bi bi-shield-lock me-2"></i>Private Volunteer Information (Visible Only to Admin)</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Volunteer Full Name <span class="text-danger">*</span></label>
+                            <input type="text" name="full_name" value="{{ plv.full_name }}" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Private Mobile / Contact Number <span class="text-danger">*</span></label>
+                            <input type="text" name="phone" value="{{ plv.phone }}" class="form-control fw-bold text-navy" required placeholder="e.g. 7405245440">
+                            <small class="text-muted">Direct mobile number of the volunteer</small>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Private Residential Address in Porbandar <span class="text-danger">*</span></label>
+                            <textarea name="residential_address" class="form-control" rows="2" required placeholder="Street / House, Colony, Porbandar">{{ plv.residential_address }}</textarea>
+                            <small class="text-muted">Confidential home address from DLSA ID Card</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Official Email</label>
+                            <input type="email" name="email" value="{{ plv.email or '' }}" class="form-control" placeholder="plv@dlsa.gujarat.gov.in">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Occupation / Background</label>
+                            <input type="text" name="primary_occupation" value="{{ plv.primary_occupation or '' }}" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Deployment Allocation -->
+                    <h6 class="fw-bold text-primary mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Porbandar Deployment Center Allocation</h6>
+                    <div class="row g-3">
+                        <div class="col-md-7">
+                            <label class="form-label fw-semibold">Assign to Deployment Center</label>
+                            <select name="deployment_id" class="form-select">
+                                <option value="">-- General Reserve / Unassigned --</option>
+                                {% for d in deployments %}
+                                    {% set is_assigned = false %}
+                                    {% for a in plv.assignments %}
+                                        {% if a.is_active and a.deployment_id == d.id %}
+                                            {% set is_assigned = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <option value="{{ d.id }}" {% if is_assigned %}selected{% endif %}>
+                                        {{ d.place_name }} ({{ d.place_type }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label fw-semibold">Assigned Duty Role</label>
+                            <input type="text" name="duty_role" value="{{ plv.current_role }}" class="form-control" placeholder="e.g. Helpdesk Assistant">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between bg-light p-3">
+                    <!-- Delete Form (Separate) -->
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="if(confirm('Are you sure you want to remove PLV {{ plv.full_name }} from the DLSA roster?')) { document.getElementById('deleteForm{{ plv.id }}').submit(); }">
+                        <i class="bi bi-trash3 me-1"></i>Remove from Roster
+                    </button>
+                    <div>
+                        <button type="button" class="btn btn-secondary btn-sm me-2" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary fw-bold px-4">
+                            <i class="bi bi-check2 me-1"></i>Save Changes
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <form id="deleteForm{{ plv.id }}" method="POST" action="{{ url_for('admin_delete_plv', plv_id=plv.id) }}" style="display: none;"></form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Modal to Enroll New PLV -->
+<div class="modal fade" id="addPLVModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('admin_add_plv') }}">
+                <div class="modal-header bg-navy text-white" style="background: #0f2b48;">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-person-plus me-2"></i>Enroll New Para Legal Volunteer</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">DLSA Sr. No. <span class="text-danger">*</span></label>
+                            <input type="text" name="registration_no" class="form-control" required placeholder="e.g. 61">
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" name="full_name" class="form-control" required placeholder="e.g. Ramesh K. Rathod">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Gender <span class="text-danger">*</span></label>
+                            <select name="gender" class="form-select" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Private Mobile Number <span class="text-danger">*</span></label>
+                            <input type="tel" name="phone" class="form-control" required placeholder="10-digit mobile">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="plv@example.com">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Private Residential Address in Porbandar <span class="text-danger">*</span></label>
+                            <textarea name="residential_address" class="form-control" rows="2" required placeholder="Street / House No., Colony / Village, Porbandar"></textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Occupation</label>
+                            <input type="text" name="primary_occupation" class="form-control" placeholder="e.g. Teacher, Social Worker, Student">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Assign to Center</label>
+                            <select name="deployment_id" class="form-select">
+                                <option value="">-- General Reserve --</option>
+                                {% for d in deployments %}
+                                <option value="{{ d.id }}">{{ d.place_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary fw-bold">Enroll Volunteer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById("adminPlvSearch");
+    const genderSelect = document.getElementById("adminGenderFilter");
+    const clearBtn = document.getElementById("clearSearchBtn");
+    const filterStatusText = document.getElementById("filterStatusText");
+    const activeFilterBadge = document.getElementById("activeFilterBadge");
+
+    function applyFilters() {
+        const query = (searchInput.value || "").trim().toLowerCase();
+        const selectedGender = (genderSelect.value || "all").toLowerCase();
+
+        let totalVisibleActive = 0;
+        let totalVisibleInactive = 0;
+        let totalVisibleMaster = 0;
+
+        // Process Active Table
+        const activeRows = document.querySelectorAll("#tabActive tr.plv-row");
+        activeRows.forEach(row => {
+            const rowGender = (row.getAttribute("data-gender") || "").toLowerCase();
+            const rowSearch = (row.getAttribute("data-search") || row.textContent).toLowerCase();
+            const matchGender = (selectedGender === "all" || rowGender === selectedGender);
+            const matchQuery = (!query || rowSearch.includes(query));
+
+            if (matchGender && matchQuery) {
+                row.classList.remove("d-none");
+                totalVisibleActive++;
+            } else {
+                row.classList.add("d-none");
+            }
+        });
+        const activeNoMatch = document.querySelector("#tabActive .no-filter-match-row");
+        if (activeNoMatch) {
+            if (totalVisibleActive === 0 && activeRows.length > 0) {
+                activeNoMatch.classList.remove("d-none");
+            } else {
+                activeNoMatch.classList.add("d-none");
+            }
+        }
+
+        // Process Inactive Table
+        const inactiveRows = document.querySelectorAll("#tabInactive tr.plv-row");
+        inactiveRows.forEach(row => {
+            const rowGender = (row.getAttribute("data-gender") || "").toLowerCase();
+            const rowSearch = (row.getAttribute("data-search") || row.textContent).toLowerCase();
+            const matchGender = (selectedGender === "all" || rowGender === selectedGender);
+            const matchQuery = (!query || rowSearch.includes(query));
+
+            if (matchGender && matchQuery) {
+                row.classList.remove("d-none");
+                totalVisibleInactive++;
+            } else {
+                row.classList.add("d-none");
+            }
+        });
+        const inactiveNoMatch = document.querySelector("#tabInactive .no-filter-match-row");
+        if (inactiveNoMatch) {
+            if (totalVisibleInactive === 0 && inactiveRows.length > 0) {
+                inactiveNoMatch.classList.remove("d-none");
+            } else {
+                inactiveNoMatch.classList.add("d-none");
+            }
+        }
+
+        // Process Master List Table
+        const masterRows = document.querySelectorAll("#tabAll tr.plv-row");
+        masterRows.forEach(row => {
+            const rowGender = (row.getAttribute("data-gender") || "").toLowerCase();
+            const rowSearch = (row.getAttribute("data-search") || row.textContent).toLowerCase();
+            const matchGender = (selectedGender === "all" || rowGender === selectedGender);
+            const matchQuery = (!query || rowSearch.includes(query));
+
+            if (matchGender && matchQuery) {
+                row.classList.remove("d-none");
+                totalVisibleMaster++;
+            } else {
+                row.classList.add("d-none");
+            }
+        });
+        const masterNoMatch = document.querySelector("#tabAll .no-filter-match-row");
+        if (masterNoMatch) {
+            if (totalVisibleMaster === 0 && masterRows.length > 0) {
+                masterNoMatch.classList.remove("d-none");
+            } else {
+                masterNoMatch.classList.add("d-none");
+            }
+        }
+
+        // Update Status text and Active Filter Indicator
+        const isFiltering = (query !== "" || selectedGender !== "all");
+        if (isFiltering) {
+            if (activeFilterBadge) activeFilterBadge.classList.remove("d-none");
+            const genderLabel = selectedGender === "all" ? "All Genders" : (selectedGender === "male" ? "Male Volunteers" : "Female Volunteers");
+            if (filterStatusText) {
+                filterStatusText.innerHTML = `<i class="bi bi-funnel-fill text-primary me-1"></i>Filter applied: <strong class="text-navy">${genderLabel}</strong> ${query ? '| Keyword: "<em>' + query + '</em>"' : ''} &bull; Visible: <strong>${totalVisibleActive}</strong> Active, <strong>${totalVisibleInactive}</strong> Inactive (Total: <strong>${totalVisibleMaster}</strong>)`;
+            }
+        } else {
+            if (activeFilterBadge) activeFilterBadge.classList.add("d-none");
+            if (filterStatusText) {
+                filterStatusText.innerHTML = `<i class="bi bi-funnel-fill text-primary me-1"></i>Showing all certified volunteers across active, inactive, and master columns.`;
+            }
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener("input", applyFilters);
+    }
+    if (genderSelect) {
+        genderSelect.addEventListener("change", applyFilters);
+    }
+    if (clearBtn) {
+        clearBtn.addEventListener("click", function() {
+            searchInput.value = "";
+            genderSelect.value = "all";
+            applyFilters();
+            searchInput.focus();
+        });
+    }
+});
+</script>
+{% endblock %}

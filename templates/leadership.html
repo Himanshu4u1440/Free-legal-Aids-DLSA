@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}{% if current_lang == 'gu' %}ન્યાયિક પદ અને નેતૃત્વ | જિલ્લા કાનૂની સેવા સત્તા મંડળ, પોરબંદર{% else %}Rank & Judicial Leadership | District Legal Services Authority, Porbandar{% endif %}{% endblock %}
+
+{% block content %}
+<div class="bg-navy text-white py-4" style="background: linear-gradient(135deg, #0f2b48 0%, #1a426f 100%);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-white-50 text-decoration-none">{% if current_lang == 'gu' %}મુખપૃષ્ઠ{% else %}Home{% endif %}</a></li>
+                <li class="breadcrumb-item active text-warning" aria-current="page">{% if current_lang == 'gu' %}ન્યાયિક પદ અને નેતૃત્વ{% else %}Rank & Leadership{% endif %}</li>
+            </ol>
+        </nav>
+        <h1 class="fw-bold mb-1"><i class="bi bi-diagram-3 me-2"></i>{% if current_lang == 'gu' %}ડીએલએસએ ન્યાયિક અધિકારીઓ અને હોદ્દાઓ{% else %}DLSA Judicial Officers & Leadership Hierarchy{% endif %}</h1>
+        <p class="text-white-50 mb-0">{% if current_lang == 'gu' %}જિલ્લા કાનૂની સેવા સત્તા મંડળનું સંચાલન કરતા ન્યાયિક અધિકારીઓ, બચાવ પક્ષના વકીલો અને વહીવટી વડાઓ{% else %}The judicial officers, defense counsels, and legal administrators managing District Legal Services Authority{% endif %}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Structure & Hierarchy Overview Section -->
+    <div class="card border-0 shadow-sm rounded-4 mb-5 bg-white p-4">
+        <h3 class="fw-bold text-navy mb-3"><i class="bi bi-bezier2 me-2 text-primary"></i>{% if current_lang == 'gu' %}કાયદાકીય સંગઠનાત્મક માળખું{% else %}Statutory Organisational Hierarchy{% endif %}</h3>
+        <p class="text-muted">
+            {% if current_lang == 'gu' %}
+            જિલ્લા કાનૂની સેવા સત્તા મંડળ (DLSA) ની સ્થાપના <em>કાનૂની સેવા સત્તા મંડળ અધિનિયમ, ૧૯૮૭ ની કલમ ૯</em> હેઠળ રાજ્ય કાનૂની સેવા સત્તા મંડળ (GSLSA) અને રાષ્ટ્રીય કાનૂની સેવા સત્તા મંડળ (NALSA) ના માર્ગદર્શન હેઠળ સત્તાઓ અને કાર્યો કરવા માટે કરવામાં આવી છે.
+            {% else %}
+            The District Legal Services Authority (DLSA) is constituted under Section 9 of the <em>Legal Services Authorities Act, 1987</em> to exercise powers and perform functions under the superintendence of the State Legal Services Authority (SLSA) and National Legal Services Authority (NALSA).
+            {% endif %}
+        </p>
+
+        <!-- Hierarchy Flow Cards -->
+        <div class="row g-3 text-center my-3">
+            <div class="col-md-3">
+                <div class="p-3 rounded-3 border border-primary bg-primary-subtle h-100">
+                    <span class="badge bg-primary mb-2">{% if current_lang == 'gu' %}ન્યાયિક વડા{% else %}Judicial Head{% endif %}</span>
+                    <h6 class="fw-bold text-navy mb-1">{% if current_lang == 'gu' %}ચેરમેનશ્રી, ડીએલએસએ{% else %}Chairman, DLSA{% endif %}</h6>
+                    <small class="text-muted d-block mb-1">{% if current_lang == 'gu' %}પ્રિન્સિપાલ ડિસ્ટ્રિક્ટ & સેશન્સ જજ{% else %}Principal District & Sessions Judge{% endif %}</small>
+                    <p class="x-small text-secondary mb-0">{% if current_lang == 'gu' %}જિલ્લા ન્યાયતંત્રના વડા છે, ડીએલએસએની તમામ કામગીરીનું નિરીક્ષણ કરે છે અને અન્ડર ટ્રાયલ રિવ્યુ કમિટીના અધ્યક્ષ છે.{% else %}Heads the District Judiciary, oversees all DLSA activities, and chairs the Under Trial Review Committee.{% endif %}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded-3 border border-success bg-success-subtle h-100">
+                    <span class="badge bg-success mb-2">{% if current_lang == 'gu' %}મુખ્ય કાર્યકારી અધિકારી{% else %}Chief Executive{% endif %}</span>
+                    <h6 class="fw-bold text-navy mb-1">{% if current_lang == 'gu' %}સેક્રેટરીશ્રી, ડીએલએસએ{% else %}Secretary, DLSA{% endif %}</h6>
+                    <small class="text-muted d-block mb-1">{% if current_lang == 'gu' %}સિનિયર સિવિલ જજ કેડર{% else %}Senior Civil Judge Cadre{% endif %}</small>
+                    <p class="x-small text-secondary mb-0">{% if current_lang == 'gu' %}દૈનિક કાનૂની સહાય કામગીરી ચલાવતા, વકીલો ફાળવતા અને પીએલવીનું સંચાલન કરતા પૂર્ણ-સમયના વહીવટી ન્યાયિક અધિકારી.{% else %}Full-time administrative judicial officer running daily legal aid operations, assigning counsels, and managing PLVs.{% endif %}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded-3 border border-warning bg-warning-subtle h-100">
+                    <span class="badge bg-warning text-dark mb-2">{% if current_lang == 'gu' %}બચાવ પક્ષના વડા{% else %}Defense Head{% endif %}</span>
+                    <h6 class="fw-bold text-navy mb-1">{% if current_lang == 'gu' %}ચીફ એલ.એ.ડી.સી.{% else %}Chief LADC{% endif %}</h6>
+                    <small class="text-muted d-block mb-1">{% if current_lang == 'gu' %}લીગલ એઇડ ડિફેન્સ કાઉન્સેલ{% else %}Legal Aid Defense Counsel{% endif %}</small>
+                    <p class="x-small text-secondary mb-0">{% if current_lang == 'gu' %}સેશન્સ કોર્ટની ટ્રાયલ અને જામીન કાર્યવાહીમાં ગરીબ કાચા કામના કેદીઓ માટે ફોજદારી બચાવનું નેતૃત્વ કરે છે.{% else %}Leads criminal defense for indigent undertrials across sessions court trials and bail proceedings.{% endif %}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded-3 border border-info bg-info-subtle h-100">
+                    <span class="badge bg-info text-dark mb-2">{% if current_lang == 'gu' %}સામુદાયિક કાનૂની સહાય{% else %}Community Legal Assistance{% endif %}</span>
+                    <h6 class="fw-bold text-navy mb-1">{% if current_lang == 'gu' %}પીએલવી અને પેનલ એડવોકેટ્સ{% else %}PLVs & Panel Advocates{% endif %}</h6>
+                    <small class="text-muted d-block mb-1">{% if current_lang == 'gu' %}ફીલ્ડ વોલેન્ટિયર્સ અને પેનલ વકીલો{% else %}Field Volunteers & Advocates{% endif %}</small>
+                    <p class="x-small text-secondary mb-0">{% if current_lang == 'gu' %}નાગરિકોને સીધી સહાય પૂરી પાડવા માટે પોલીસ સ્ટેશનો, જેલ ક્લિનિક્સ, હોસ્પિટલો અને પંચાયતોમાં તૈનાત.{% else %}Deployed at police stations, jail clinics, hospitals, and panchayats to directly assist citizens.{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Official Profiles -->
+    <h3 class="fw-bold text-navy mb-4"><i class="bi bi-person-lines-fill me-2 text-primary"></i>{% if current_lang == 'gu' %}કાર્યકારી પરિષદ અને ન્યાયિક અધિકારીઓની ડિરેક્ટરી{% else %}Executive Council & Judicial Officers Directory{% endif %}</h3>
+
+    <div class="row g-4">
+        {% for member in members %}
+        <div class="col-lg-6">
+            <div class="official-card">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="{{ member.photo_url }}" alt="{{ member.name }}" class="rounded-circle me-3 border border-warning border-3" style="width: 80px; height: 80px; object-fit: cover; box-shadow: 3px 4px 8px rgba(15, 43, 72, 0.20);">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="badge bg-navy text-white px-2 py-1"><i class="bi bi-award me-1"></i>{{ member.category | t }}</span>
+                        </div>
+                        <h4 class="fw-bold text-navy mb-1">{{ member.name }}</h4>
+                        <div class="text-primary fw-semibold small">{{ member.designation | t }}</div>
+                        <small class="text-muted"><i class="bi bi-mortarboard me-1"></i>{{ member.qualification }}</small>
+                    </div>
+                </div>
+
+                <div class="info-subcard mb-3">
+                    <h6 class="fw-bold text-navy mb-1 small text-uppercase"><i class="bi bi-info-circle me-1 text-primary"></i>{% if current_lang == 'gu' %}અધિકારી પરિચય:{% else %}Profile Overview:{% endif %}</h6>
+                    <p class="small text-muted mb-0">{{ member.bio | t }}</p>
+                </div>
+
+                <div class="info-subcard mb-3">
+                    <h6 class="fw-bold text-navy mb-2 small text-uppercase"><i class="bi bi-check2-square me-1 text-success"></i>{% if current_lang == 'gu' %}કાયદાકીય સત્તા અને મુખ્ય ફરજો:{% else %}Statutory Duties & Key Powers:{% endif %}</h6>
+                    <div class="small text-secondary">
+                        {{ member.responsibilities | t }}
+                    </div>
+                </div>
+
+                <div class="info-subcard mt-auto mb-0">
+                    <div class="row g-2 small text-muted">
+                        <div class="col-sm-6">
+                            <i class="bi bi-geo-alt me-1 text-danger"></i><strong>{% if current_lang == 'gu' %}કચેરીનું સરનામું:{% else %}Office:{% endif %}</strong> {{ member.office_address | t }}
+                        </div>
+                        <div class="col-sm-6">
+                            <i class="bi bi-telephone me-1 text-success"></i><strong>{% if current_lang == 'gu' %}સંપર્ક નંબર:{% else %}Phone:{% endif %}</strong> {{ member.phone }}
+                        </div>
+                        <div class="col-12 mt-1">
+                            <i class="bi bi-envelope me-1 text-info"></i><strong>{% if current_lang == 'gu' %}સત્તાવાર ઇમેઇલ:{% else %}Official Email:{% endif %}</strong> 
+                            <a href="mailto:{{ member.email }}" class="text-decoration-none text-navy">{{ member.email }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Legal Framework Card for Citizens -->
+    <div class="card border-0 shadow-sm rounded-4 mt-5 p-4 bg-primary-subtle border border-primary">
+        <h4 class="fw-bold text-navy mb-2"><i class="bi bi-book me-2"></i>{% if current_lang == 'gu' %}કાયદાકીય સત્તા અને લોકજવાબદારી{% else %}Statutory Powers & Accountability{% endif %}</h4>
+        <p class="small text-secondary mb-0">
+            {% if current_lang == 'gu' %}
+            જિલ્લા કાનૂની સેવા સત્તા મંડળના અધ્યક્ષશ્રી અને સચિવશ્રી કાચા કામના કેદીઓના કેસોની સમીક્ષા કરવા, પોલીસ લોકઅપ અને જેલોનું આકસ્મિક નિરીક્ષણ કરવા, બાળ સંભાળ ગૃહોની મુલાકાત લેવા અને કોઈપણ અદાલતમાં કોઈ વ્યક્તિ પ્રતિનિધિત્વ વગર ન રહે તે સુનિશ્ચિત કરવા માટે કાયદાકીય સત્તા ધરાવે છે. તમામ નાગરિકો સીધા સચિવશ્રી, ડીએલએસએને ફરિયાદ કરવા હકદાર છે.
+            {% else %}
+            The Chairman and Secretary of the District Legal Services Authority exercise statutory powers to review undertrial cases, order surprise inspections of police lockups and prisons, inspect child care institutions, and ensure that no person remains unrepresented before any court. All citizens are entitled to address grievances directly to the Secretary, DLSA.
+            {% endif %}
+        </p>
+    </div>
+</div>
+{% endblock %}

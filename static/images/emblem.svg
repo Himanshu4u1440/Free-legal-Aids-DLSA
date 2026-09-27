@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <circle cx="150" cy="150" r="140" fill="#0f2b48" stroke="#c59b27" stroke-width="8"/>
+  <circle cx="150" cy="150" r="125" fill="#ffffff" stroke="#c59b27" stroke-width="2"/>
+  
+  <!-- Scales of Justice -->
+  <line x1="150" y1="60" x2="150" y2="210" stroke="#0f2b48" stroke-width="6"/>
+  <line x1="85" y1="95" x2="215" y2="95" stroke="#c59b27" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="150" cy="95" r="10" fill="#0f2b48"/>
+  
+  <!-- Left Pan -->
+  <line x1="85" y1="95" x2="65" y2="145" stroke="#64748b" stroke-width="2"/>
+  <line x1="85" y1="95" x2="105" y2="145" stroke="#64748b" stroke-width="2"/>
+  <path d="M55,145 Q85,175 115,145 Z" fill="#c59b27" stroke="#0f2b48" stroke-width="2"/>
+  
+  <!-- Right Pan -->
+  <line x1="215" y1="95" x2="195" y2="145" stroke="#64748b" stroke-width="2"/>
+  <line x1="215" y1="95" x2="235" y2="145" stroke="#64748b" stroke-width="2"/>
+  <path d="M185,145 Q215,175 245,145 Z" fill="#c59b27" stroke="#0f2b48" stroke-width="2"/>
+  
+  <!-- Pedestal -->
+  <rect x="110" y="210" width="80" height="15" rx="4" fill="#0f2b48"/>
+  <rect x="90" y="225" width="120" height="12" rx="4" fill="#c59b27"/>
+  
+  <!-- Outer Text -->
+  <text x="150" y="46" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" fill="#0f2b48" text-anchor="middle" letter-spacing="1.5">DISTRICT LEGAL SERVICES AUTHORITY</text>
+  <text x="150" y="258" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800" fill="#0f2b48" text-anchor="middle" letter-spacing="2">PORBANDAR • GUJARAT</text>
+  <text x="150" y="278" font-family="Segoe UI, sans-serif" font-size="10" font-weight="700" fill="#138808" text-anchor="middle">સર્વેષાં ન્યાયઃ • JUSTICE FOR ALL</text>
+</svg>

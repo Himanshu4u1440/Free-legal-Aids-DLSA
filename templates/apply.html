@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Apply for Free Legal Aid | District Legal Services Authority{% endblock %}
+
+{% block content %}
+<div class="bg-navy text-white py-4" style="background: linear-gradient(135deg, #b45309 0%, #0f2b48 100%);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active text-warning" aria-current="page">Apply for Legal Aid</li>
+            </ol>
+        </nav>
+        <h1 class="fw-bold mb-1"><i class="bi bi-file-earmark-text-fill me-2"></i>Apply for Free Legal Aid & Defense Counsel</h1>
+        <p class="text-white-50 mb-0">Under Section 12 of the Legal Services Authorities Act, 1987, eligible citizens receive 100% free legal representation</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Statutory Info Notice -->
+            <div class="alert alert-info border-info d-flex align-items-center mb-4 p-3 rounded-4 shadow-sm">
+                <i class="bi bi-info-circle-fill fs-2 me-3 text-info"></i>
+                <div class="small">
+                    <strong>Zero Litigation Expenses:</strong> If you are eligible, the District Legal Services Authority will bear all expenses including Advocate fees, drafting charges, court typing charges, and certified copy fees. No person shall be denied justice due to financial incapacity.
+                </div>
+            </div>
+
+            <!-- Application Form Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <h3 class="fw-bold text-navy mb-4 border-bottom pb-3">
+                    <i class="bi bi-pencil-square me-2 text-warning"></i>Citizen Legal Aid Application Form
+                </h3>
+
+                <form method="POST" action="{{ url_for('apply_legal_aid') }}">
+                    <!-- Section 1: Personal Details -->
+                    <h5 class="fw-bold text-primary mb-3"><i class="bi bi-1-circle me-2"></i>Applicant Personal Information</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" name="applicant_name" class="form-control" required placeholder="e.g. Ramesh Kumar">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Gender <span class="text-danger">*</span></label>
+                            <select name="gender" class="form-select" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Transgender">Transgender</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Mobile Number <span class="text-danger">*</span></label>
+                            <input type="tel" name="phone" class="form-control" required placeholder="10-digit mobile number" pattern="[0-9]{10}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Email Address (Optional)</label>
+                            <input type="email" name="email" class="form-control" placeholder="name@example.com">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">ID Proof Type</label>
+                            <select name="id_proof_type" class="form-select">
+                                <option value="Aadhaar" selected>Aadhaar Card</option>
+                                <option value="Voter ID">Voter ID (EPIC)</option>
+                                <option value="Ration Card">Ration Card (BPL/AAY)</option>
+                                <option value="e-Shram">e-Shram Card</option>
+                                <option value="Other">Other Official ID</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">ID Proof Number</label>
+                            <input type="text" name="id_proof_number" class="form-control" placeholder="e.g. XXXX-XXXX-1234">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Complete Residential Address <span class="text-danger">*</span></label>
+                            <textarea name="residential_address" class="form-control" rows="2" required placeholder="House/Street/Village, Post Office, Tehsil, District, PIN"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Eligibility Entitlement -->
+                    <h5 class="fw-bold text-primary mb-3"><i class="bi bi-2-circle me-2"></i>Entitlement Category (Section 12 of LSA Act)</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Select Your Category <span class="text-danger">*</span></label>
+                            <select name="category" class="form-select" required>
+                                <option value="" disabled selected>-- Choose Entitlement --</option>
+                                <option value="Woman / Child">Woman or Child (Under 18)</option>
+                                <option value="SC / ST">Member of Scheduled Caste (SC) or Scheduled Tribe (ST)</option>
+                                <option value="Custody / Undertrial">Person in Custody / Jail Inmate / Remand</option>
+                                <option value="Industrial Workman">Industrial Workman / Factory Labour</option>
+                                <option value="Annual Income under Rs 3 Lakh">General Indigent Litigant (Income &lt; ₹3 Lakhs/year)</option>
+                                <option value="Senior Citizen (60+)">Senior Citizen (Aged 60+)</option>
+                                <option value="Disabled / Mentally Ill">Person with Disability or Mental Illness</option>
+                                <option value="Disaster / Calamity Victim">Victim of Mass Disaster, Flood, Riot, or Calamity</option>
+                                <option value="Victim of Trafficking">Victim of Human Trafficking or Beggary</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Annual Family Income (₹) <span class="text-danger">*</span></label>
+                            <input type="number" name="annual_income" class="form-control" required placeholder="e.g. 80000" min="0" step="1000">
+                            <small class="text-muted">Enter 0 if applicant has no independent income or is in custody</small>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Legal Case Information -->
+                    <h5 class="fw-bold text-primary mb-3"><i class="bi bi-3-circle me-2"></i>Details of the Legal Matter</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nature of Legal Issue <span class="text-danger">*</span></label>
+                            <select name="case_type" class="form-select" required>
+                                <option value="" disabled selected>-- Select Matter Type --</option>
+                                <option value="Domestic Violence">Domestic Violence & Protection Order</option>
+                                <option value="Family & Matrimonial">Family & Matrimonial Dispute / Divorce / Child Custody</option>
+                                <option value="Criminal Defense">Criminal Defense / Bail Petition / Trial</option>
+                                <option value="Civil & Property">Civil Suit / Land & Property / Tenancy</option>
+                                <option value="Labour & Wages">Labour Dispute / Unpaid Wages / Illegal Termination</option>
+                                <option value="Motor Accident Claim">Motor Accident Claim (MACT Compensation)</option>
+                                <option value="Senior Citizen Maintenance">Senior Citizen Maintenance Petition</option>
+                                <option value="Cyber Crime Victim">Cyber Crime / Online Fraud Assistance</option>
+                                <option value="Other">Other Legal Grievance</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Court / Police Station Jurisdiction (If known)</label>
+                            <input type="text" name="court_jurisdiction" class="form-control" placeholder="e.g. District Courts Complex, or Kotwali Police Station">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Opposing Party Name & Address (If applicable)</label>
+                            <input type="text" name="opposing_party_details" class="form-control" placeholder="Name, relationship, or employer details of opposite party">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Summary of Your Legal Grievance <span class="text-danger">*</span></label>
+                            <textarea name="case_summary" class="form-control" rows="4" required placeholder="Please describe the facts of your dispute or legal requirement in simple words. Include important dates or case numbers if any."></textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Assigned / Preferred PLV Facilitator (Optional)</label>
+                            <select name="assigned_plv_id" class="form-select">
+                                <option value="">-- Let DLSA assign nearest available PLV --</option>
+                                {% for plv in plvs %}
+                                <option value="{{ plv.id }}" {% if selected_plv_id and selected_plv_id|string == plv.id|string %}selected{% endif %}>
+                                    DLSA Sr. No. {{ plv.dlsa_sr_no }} - {{ plv.full_name }} ({{ plv.current_deployment }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Declaration -->
+                    <div class="form-check mb-4 p-3 bg-light rounded-3 border">
+                        <input class="form-check-input ms-0 me-2" type="checkbox" id="declarationCheck" required>
+                        <label class="form-check-label small text-muted" for="declarationCheck">
+                            <strong>Self-Declaration:</strong> I hereby solemnly affirm that the information submitted above is true and accurate to the best of my knowledge. I understand that free legal aid is subject to verification by the District Legal Services Authority.
+                        </label>
+                    </div>
+
+                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-warning btn-lg fw-bold text-dark px-4 shadow">
+                            <i class="bi bi-send-check me-2"></i>Submit Application for Legal Aid
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

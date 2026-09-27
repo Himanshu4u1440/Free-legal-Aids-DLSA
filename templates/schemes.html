@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}{% if current_lang == 'gu' %}કાનૂની યોજનાઓ અને કલ્યાણકારી કાર્યક્રમો | ડીએલએસએ પોરબંદર{% else %}DLSA & NALSA Welfare Schemes | District Legal Services Authority{% endif %}{% endblock %}
+
+{% block content %}
+<div class="bg-navy text-white py-4" style="background: linear-gradient(135deg, #1e293b 0%, #0f2b48 100%);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-white-50 text-decoration-none">{% if current_lang == 'gu' %}મુખપૃષ્ઠ{% else %}Home{% endif %}</a></li>
+                <li class="breadcrumb-item active text-warning" aria-current="page">{% if current_lang == 'gu' %}કાનૂની યોજનાઓ{% else %}Schemes{% endif %}</li>
+            </ol>
+        </nav>
+        <h1 class="fw-bold mb-1"><i class="bi bi-journal-bookmark-fill me-2"></i>{% if current_lang == 'gu' %}કાનૂની સેવાઓ અને કલ્યાણકારી યોજનાઓ{% else %}Legal Services & Welfare Schemes{% endif %}</h1>
+        <p class="text-white-50 mb-0">{% if current_lang == 'gu' %}સંરક્ષણ, કાનૂની બચાવ અને પુનર્વસન સુનિશ્ચિત કરતી કાયદાકીય નાલસા (NALSA) અને ડીએલએસએ યોજનાઓ{% else %}Statutory NALSA & DLSA schemes ensuring protection, legal defense, and rehabilitation{% endif %}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Search Bar -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+        <div class="row align-items-center">
+            <div class="col-md-7">
+                <h4 class="fw-bold text-navy mb-1"><i class="bi bi-search me-2 text-primary"></i>{% if current_lang == 'gu' %}જાહેર કલ્યાણ યોજનાઓ શોધો{% else %}Explore Public Schemes{% endif %}</h4>
+                <p class="small text-muted mb-0">{% if current_lang == 'gu' %}લક્ષિત જૂથ, કાનૂની લાભ અથવા શ્રેણી અનુસાર યોજનાઓ ફિલ્ટર કરવા કીવર્ડ્સ લખો{% else %}Type keywords to filter schemes by target group, legal benefit, or category{% endif %}</p>
+            </div>
+            <div class="col-md-5 mt-3 mt-md-0">
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                    <input type="text" id="schemeSearchInput" class="form-control" placeholder="{% if current_lang == 'gu' %}યોજનાઓ શોધો (દા.ત. મહિલા, વરિષ્ઠ નાગરિક, જામીન)...{% else %}Search schemes (e.g. Women, Senior Citizen, Bail)...{% endif %}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schemes Grid -->
+    <div class="row g-4" id="schemesGrid">
+        {% for scheme in schemes %}
+        <div class="col-lg-6 scheme-item" data-title="{{ scheme.title }}" data-target="{{ scheme.target_group }}">
+            <div class="scheme-card">
+                <!-- Header Identity Subcard -->
+                <div class="info-subcard mb-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="scheme-icon-box mb-0 shadow-sm" style="background-color: #eff6ff !important; border: none !important; box-shadow: 2px 3px 8px rgba(15, 43, 72, 0.10) !important;">
+                            <i class="bi {{ scheme.icon_class or 'bi-shield-check' }}"></i>
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-2 shadow-sm">
+                            <i class="bi bi-people me-1"></i>{{ scheme.target_group | t }}
+                        </span>
+                    </div>
+                    <small class="text-muted font-monospace d-block mb-1">{{ scheme.scheme_code }}</small>
+                    <h4 class="fw-bold text-navy mb-0 fs-5">{{ scheme.title | t }}</h4>
+                </div>
+
+                <!-- Overview Subcard -->
+                <div class="info-subcard mb-3">
+                    <h6 class="fw-bold text-navy mb-1 small text-uppercase"><i class="bi bi-info-circle me-1 text-primary"></i>{% if current_lang == 'gu' %}યોજના સારાંશ:{% else %}Scheme Overview:{% endif %}</h6>
+                    <p class="text-secondary small mb-0">{{ scheme.short_description | t }}</p>
+                </div>
+
+                <!-- Detailed Guidelines Subcard -->
+                <div class="info-subcard mb-3">
+                    <h6 class="fw-bold text-navy mb-2 small text-uppercase"><i class="bi bi-card-checklist me-1 text-success"></i>{% if current_lang == 'gu' %}વિસ્તૃત માહિતી અને પાત્રતા:{% else %}Detailed Guidelines & Eligibility:{% endif %}</h6>
+                    <div class="accordion accordion-flush border-0 rounded-3 overflow-hidden bg-white shadow-none" id="accScheme{{ scheme.id }}" style="border-radius: 12px !important; box-shadow: 2px 2px 8px rgba(15, 43, 72, 0.06) !important;">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed py-2 px-3 small fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseObj{{ scheme.id }}">
+                                    <i class="bi bi-bullseye me-2 text-primary"></i>{% if current_lang == 'gu' %}ઉદ્દેશ્યો અને કાનૂની આદેશ{% else %}Objectives & Legal Mandate{% endif %}
+                                </button>
+                            </h2>
+                            <div id="collapseObj{{ scheme.id }}" class="accordion-collapse collapse" data-bs-parent="#accScheme{{ scheme.id }}">
+                                <div class="accordion-body small text-muted bg-light">
+                                    {{ scheme.detailed_objectives | t }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed py-2 px-3 small fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseElig{{ scheme.id }}">
+                                    <i class="bi bi-check2-circle me-2 text-success"></i>{% if current_lang == 'gu' %}પાત્રતાના માપદંડ{% else %}Eligibility Criteria{% endif %}
+                                </button>
+                            </h2>
+                            <div id="collapseElig{{ scheme.id }}" class="accordion-collapse collapse" data-bs-parent="#accScheme{{ scheme.id }}">
+                                <div class="accordion-body small text-muted bg-light">
+                                    {{ scheme.eligibility_criteria | t }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed py-2 px-3 small fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBen{{ scheme.id }}">
+                                    <i class="bi bi-gift me-2 text-warning"></i>{% if current_lang == 'gu' %}લાભ અને મળવાપાત્ર સહાય{% else %}Entitlements & Benefits{% endif %}
+                                </button>
+                            </h2>
+                            <div id="collapseBen{{ scheme.id }}" class="accordion-collapse collapse" data-bs-parent="#accScheme{{ scheme.id }}">
+                                <div class="accordion-body small text-muted bg-light">
+                                    {{ scheme.benefits | t }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed py-2 px-3 small fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDocs{{ scheme.id }}">
+                                    <i class="bi bi-folder2-open me-2 text-info"></i>{% if current_lang == 'gu' %}જરૂરી દસ્તાવેજો અને પ્રક્રિયા{% else %}Required Documents & Procedure{% endif %}
+                                </button>
+                            </h2>
+                            <div id="collapseDocs{{ scheme.id }}" class="accordion-collapse collapse" data-bs-parent="#accScheme{{ scheme.id }}">
+                                <div class="accordion-body small text-muted bg-light">
+                                    <strong>{% if current_lang == 'gu' %}દસ્તાવેજો:{% else %}Documents:{% endif %}</strong> {{ scheme.required_documents | t }}
+                                    <hr class="my-2">
+                                    <strong>{% if current_lang == 'gu' %}પ્રક્રિયા:{% else %}Procedure:{% endif %}</strong> {{ scheme.application_process | t }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Footer Subcard -->
+                <div class="info-subcard mt-auto mb-0 d-flex flex-wrap justify-content-between align-items-center gap-2" style="background-color: #eaedf2 !important; border: 1px solid #cbd5e1 !important; border-radius: 20px !important; box-shadow: 0 4px 12px rgba(15, 43, 72, 0.08) !important; padding: 1.1rem 1.25rem;">
+                    <small class="text-muted"><i class="bi bi-person-gear me-1 text-primary"></i><strong>{% if current_lang == 'gu' %}નોડલ અધિકારી:{% else %}Nodal Officer:{% endif %}</strong> {{ (scheme.nodal_officer or 'Secretary DLSA') | t }}</small>
+                    <a href="{{ url_for('apply_legal_aid') }}?scheme={{ scheme.scheme_code }}" class="btn btn-sm btn-warning text-dark fw-bold px-3 shadow-sm rounded-pill">
+                        <i class="bi bi-pencil-square me-1"></i>{% if current_lang == 'gu' %}આ યોજના હેઠળ અરજી કરો{% else %}Apply Under Scheme{% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
