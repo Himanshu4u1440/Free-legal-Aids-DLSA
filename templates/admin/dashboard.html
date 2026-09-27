@@ -90,13 +90,6 @@
             </div>
             <div class="d-flex align-items-center gap-2">
                 <div class="badge bg-secondary">Total: {{ applications|length }} cases</div>
-                {% if applications %}
-                <form method="POST" action="{{ url_for('admin_clear_all_applications') }}" class="d-inline" onsubmit="return confirm('Are you sure you want to clear ALL applications from the system?');">
-                    <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm">
-                        <i class="bi bi-trash3 me-1"></i>Clear All Applications
-                    </button>
-                </form>
-                {% endif %}
             </div>
         </div>
 

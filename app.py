@@ -467,16 +467,6 @@ def admin_update_application(app_id):
         flash(f"Application {app_record.application_number} updated successfully.", "success")
     return redirect(url_for("admin_dashboard"))
 
-@app.route("/admin/applications/clear-all", methods=["POST"])
-@login_required
-def admin_clear_all_applications():
-    """Removes all legal aid applications from the database."""
-    db = get_db()
-    count = db.query(LegalAidApplication).delete()
-    db.commit()
-    flash(f"All {count} legal aid applications have been successfully removed from the database.", "info")
-    return redirect(url_for("admin_dashboard"))
-
 @app.route("/admin/plvs")
 @login_required
 def admin_plvs():

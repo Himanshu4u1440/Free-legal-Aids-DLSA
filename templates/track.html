@@ -180,14 +180,6 @@
                                 <div class="text-dark font-monospace small mt-2 p-2 bg-light rounded border">
                                     "{{ application.last_sms_notification }}"
                                 </div>
-                                <div class="mt-3 d-flex flex-wrap gap-2">
-                                    <a href="sms:{{ application.phone }}?body={{ application.last_sms_notification | urlencode }}" class="btn btn-outline-primary btn-sm fw-semibold shadow-sm">
-                                        <i class="bi bi-chat-dots-fill me-1"></i>Open in Phone SMS App
-                                    </a>
-                                    <a href="https://wa.me/91{{ application.phone|replace(' ', '')|replace('+91', '')|replace('-', '') }}?text={{ application.last_sms_notification | urlencode }}" target="_blank" class="btn btn-success btn-sm fw-semibold shadow-sm">
-                                        <i class="bi bi-whatsapp me-1"></i>Send to WhatsApp
-                                    </a>
-                                </div>
                             </div>
                             {% else %}
                             <div class="p-2 bg-white rounded border small text-muted">

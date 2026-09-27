@@ -41,10 +41,10 @@
                 <!-- Header Identity Subcard -->
                 <div class="info-subcard mb-3">
                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
-                        <div class="scheme-icon-box mb-0 shadow-sm" style="background-color: #eff6ff !important; border: none !important; box-shadow: 2px 3px 8px rgba(15, 43, 72, 0.10) !important;">
+                        <div class="scheme-icon-box mb-0 shadow-sm" style="background-color: #ffffff !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 2px 8px rgba(15, 43, 72, 0.08) !important;">
                             <i class="bi {{ scheme.icon_class or 'bi-shield-check' }}"></i>
                         </div>
-                        <span class="badge bg-primary-subtle text-primary border border-primary px-2.5 py-1.5 shadow-sm text-wrap text-start" style="max-width: 100%; white-space: normal; line-height: 1.35; word-break: break-word; font-size: 0.78rem;">
+                        <span class="badge bg-white text-navy border border-secondary-subtle px-2.5 py-1.5 shadow-sm text-wrap text-start" style="max-width: 100%; white-space: normal; line-height: 1.35; word-break: break-word; font-size: 0.78rem;">
                             <i class="bi bi-people me-1"></i>{{ scheme.target_group | t }}
                         </span>
                     </div>
@@ -69,7 +69,7 @@
                                 </button>
                             </h2>
                             <div id="collapseObj{{ scheme.id }}" class="accordion-collapse collapse" data-bs-parent="#accScheme{{ scheme.id }}">
-                                <div class="accordion-body small text-muted bg-light">
+                                <div class="accordion-body small text-muted bg-white">
                                     {{ scheme.detailed_objectives | t }}
                                 </div>
                             </div>
@@ -82,7 +82,7 @@
                                 </button>
                             </h2>
                             <div id="collapseElig{{ scheme.id }}" class="accordion-collapse collapse" data-bs-parent="#accScheme{{ scheme.id }}">
-                                <div class="accordion-body small text-muted bg-light">
+                                <div class="accordion-body small text-muted bg-white">
                                     {{ scheme.eligibility_criteria | t }}
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
                                 </button>
                             </h2>
                             <div id="collapseBen{{ scheme.id }}" class="accordion-collapse collapse" data-bs-parent="#accScheme{{ scheme.id }}">
-                                <div class="accordion-body small text-muted bg-light">
+                                <div class="accordion-body small text-muted bg-white">
                                     {{ scheme.benefits | t }}
                                 </div>
                             </div>
@@ -108,7 +108,7 @@
                                 </button>
                             </h2>
                             <div id="collapseDocs{{ scheme.id }}" class="accordion-collapse collapse" data-bs-parent="#accScheme{{ scheme.id }}">
-                                <div class="accordion-body small text-muted bg-light">
+                                <div class="accordion-body small text-muted bg-white">
                                     <strong>{% if current_lang == 'gu' %}દસ્તાવેજો:{% else %}Documents:{% endif %}</strong> {{ scheme.required_documents | t }}
                                     <hr class="my-2">
                                     <strong>{% if current_lang == 'gu' %}પ્રક્રિયા:{% else %}Procedure:{% endif %}</strong> {{ scheme.application_process | t }}
@@ -119,7 +119,7 @@
                 </div>
 
                 <!-- Action Footer Subcard -->
-                <div class="info-subcard mt-auto mb-0 d-flex flex-wrap justify-content-between align-items-center gap-2" style="background-color: #eaedf2 !important; border: 1px solid #cbd5e1 !important; border-radius: 20px !important; box-shadow: 0 4px 12px rgba(15, 43, 72, 0.08) !important; padding: 1.1rem 1.25rem;">
+                <div class="info-subcard mt-auto mb-0 d-flex flex-wrap justify-content-between align-items-center gap-2" style="background-color: #ffffff !important; border: 1px solid #e2e8f0 !important; border-radius: 14px !important; box-shadow: 0 2px 8px rgba(15, 43, 72, 0.06) !important; padding: 1.1rem 1.25rem;">
                     <small class="text-muted"><i class="bi bi-person-gear me-1 text-primary"></i><strong>{% if current_lang == 'gu' %}નોડલ અધિકારી:{% else %}Nodal Officer:{% endif %}</strong> {{ (scheme.nodal_officer or 'Secretary DLSA') | t }}</small>
                     <a href="{{ url_for('apply_legal_aid') }}?scheme={{ scheme.scheme_code }}" class="btn btn-sm btn-warning text-dark fw-bold px-3 shadow-sm rounded-pill">
                         <i class="bi bi-pencil-square me-1"></i>{% if current_lang == 'gu' %}આ યોજના હેઠળ અરજી કરો{% else %}Apply Under Scheme{% endif %}

@@ -16,6 +16,7 @@ TRANSLATIONS_DICT = {
     "Schemes": "કાનૂની યોજનાઓ",
     "Track Status": "અરજી સ્થિતિ",
     "Apply Free Legal Aid": "મફત કાનૂની સહાય મેળવો",
+    "Free Legal Aid": "મફત કાનૂની સહાય",
     "24x7 HELPLINE": "૨૪x૭ હેલ્પલાઇન",
     "National Legal Aid:": "રાષ્ટ્રીય કાનૂની સહાય:",
     "National Legal Aid": "રાષ્ટ્રીય કાનૂની સહાય",
