@@ -83,12 +83,21 @@
 
     <!-- Legal Aid Applications Management Table -->
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
-        <div class="card-header bg-white p-4 border-bottom d-flex flex-wrap justify-content-between align-items-center">
+        <div class="card-header bg-white p-4 border-bottom d-flex flex-wrap justify-content-between align-items-center gap-2">
             <div>
                 <h5 class="fw-bold text-navy mb-0"><i class="bi bi-inbox-fill me-2 text-primary"></i>Citizen Legal Aid Applications</h5>
                 <small class="text-muted">Review, verify, assign panel advocate, and update case progress</small>
             </div>
-            <div class="badge bg-secondary">Total: {{ applications|length }} cases</div>
+            <div class="d-flex align-items-center gap-2">
+                <div class="badge bg-secondary">Total: {{ applications|length }} cases</div>
+                {% if applications %}
+                <form method="POST" action="{{ url_for('admin_clear_all_applications') }}" class="d-inline" onsubmit="return confirm('Are you sure you want to clear ALL applications from the system?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm">
+                        <i class="bi bi-trash3 me-1"></i>Clear All Applications
+                    </button>
+                </form>
+                {% endif %}
+            </div>
         </div>
 
         <div class="table-responsive">
@@ -158,10 +167,18 @@
                             </div>
                             {% endif %}
                         </td>
-                        <td class="pe-4 text-end">
-                            <button class="btn btn-sm btn-outline-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#editModal{{ app.id }}">
-                                <i class="bi bi-pencil-square me-1"></i>Manage
-                            </button>
+                        <td class="pe-4 text-end text-nowrap">
+                            <div class="d-inline-flex gap-1 align-items-center">
+                                <a href="https://wa.me/91{{ app.phone|replace(' ', '')|replace('+91', '')|replace('-', '') }}?text={{ (app.last_sms_notification or 'Dear ' ~ app.applicant_name ~ ', your DLSA Porbandar Legal Aid application #' ~ app.application_number ~ ' status is: ' ~ app.status ~ '. Helpline: 0286-2244222.') | urlencode }}" target="_blank" class="btn btn-sm btn-outline-success" title="Notify Citizen on WhatsApp">
+                                    <i class="bi bi-whatsapp"></i>
+                                </a>
+                                <a href="sms:{{ app.phone }}?body={{ (app.last_sms_notification or 'Dear ' ~ app.applicant_name ~ ', your DLSA Porbandar Legal Aid application #' ~ app.application_number ~ ' is: ' ~ app.status) | urlencode }}" class="btn btn-sm btn-outline-info" title="Send SMS">
+                                    <i class="bi bi-chat-dots"></i>
+                                </a>
+                                <button class="btn btn-sm btn-outline-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#editModal{{ app.id }}">
+                                    <i class="bi bi-pencil-square me-1"></i>Manage
+                                </button>
+                            </div>
                         </td>
                     </tr>
 

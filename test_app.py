@@ -8,6 +8,41 @@ class DLSAPorbandarTestCase(unittest.TestCase):
         self.app = app
         self.app.config['TESTING'] = True
         self.client = self.app.test_client()
+        with SessionLocal() as db:
+            db.query(PLV).update({PLV.is_active: True, PLV.status: "Active"})
+            app101 = db.query(LegalAidApplication).filter_by(application_number="DLSA-PBD-2026-101").first()
+            if not app101:
+                db.add(LegalAidApplication(
+                    application_number="DLSA-PBD-2026-101",
+                    applicant_name="Bhavnaben J. Rathod",
+                    gender="Female",
+                    phone="9879012345",
+                    residential_address="Chhaya, Porbandar",
+                    category="Woman / Child",
+                    annual_income=45000.00,
+                    case_type="Domestic Violence",
+                    case_summary="Facing persistent domestic cruelty and abandonment.",
+                    assigned_counsel="Adv. Front Office Panel Lawyer",
+                    assigned_counsel_phone="98250 87654",
+                    status="Counsel Assigned",
+                    last_sms_notification="[DLSA-SMS] Dear Bhavnaben, Free Legal Counsel 'Adv. Front Office Panel Lawyer' (Contact: 98250 87654) assigned."
+                ))
+            app103 = db.query(LegalAidApplication).filter_by(application_number="DLSA-PBD-2026-103").first()
+            if not app103:
+                db.add(LegalAidApplication(
+                    application_number="DLSA-PBD-2026-103",
+                    applicant_name="Dhirubhai G. Dave",
+                    gender="Male",
+                    phone="9428345678",
+                    residential_address="Bokhira, Porbandar",
+                    category="General (< 3 Lakh)",
+                    annual_income=120000.00,
+                    case_type="Civil Property Dispute",
+                    case_summary="Land boundary title demarcation dispute in Porbandar.",
+                    status="Submitted",
+                    last_sms_notification="[DLSA-SMS] Application submitted successfully."
+                ))
+            db.commit()
 
     def test_01_homepage_renders_porbandar(self):
         """Test homepage renders with DLSA Porbandar details."""

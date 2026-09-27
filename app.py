@@ -102,9 +102,63 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def send_live_sms(phone, message_text):
+    """
+    Attempts to dispatch real SMS through Fast2SMS Gateway if FAST2SMS_API_KEY is configured.
+    Falls back gracefully without throwing errors if no key is configured or offline.
+    """
+    api_key = os.getenv("FAST2SMS_API_KEY")
+    if not api_key:
+        return False, "No FAST2SMS_API_KEY configured"
+
+    import re
+    import urllib.request
+    import json
+    
+    # Strip any formatting, non-digit characters, and Indian +91 / 0 prefix
+    digits_only = re.sub(r"\D", "", phone or "")
+    if digits_only.startswith("91") and len(digits_only) == 12:
+        clean_phone = digits_only[2:]
+    elif digits_only.startswith("0") and len(digits_only) == 11:
+        clean_phone = digits_only[1:]
+    else:
+        clean_phone = digits_only
+
+    if len(clean_phone) != 10:
+        return False, f"Not a valid 10-digit Indian phone number ({phone})"
+
+    url = "https://www.fast2sms.com/dev/bulkV2"
+    payload = json.dumps({
+        "route": "q",
+        "message": message_text[:155],
+        "language": "english",
+        "flash": 0,
+        "numbers": clean_phone
+    }).encode("utf-8")
+
+    req = urllib.request.Request(
+        url,
+        data=payload,
+        headers={
+            "authorization": api_key,
+            "Content-Type": "application/json"
+        }
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            if data.get("return") is True:
+                logger.info(f"[LIVE SMS DELIVERED] Successfully sent SMS to {clean_phone} via Fast2SMS: {data}")
+                return True, "SMS delivered to mobile via Fast2SMS Gateway"
+            else:
+                logger.warning(f"[FAST2SMS GATEWAY NOTICE] {data}")
+                return False, data.get("message", "Fast2SMS error")
+    except Exception as ex:
+        logger.warning(f"[FAST2SMS EXCEPTION] Failed to dispatch live SMS: {ex}")
+        return False, str(ex)
+
 def dispatch_status_sms(app_record):
     """
-    Simulates Government / DLSA Automated SMS Gateway to notify citizens.
     Dispatches SMS to citizen mobile number for:
     - Submission
     - Under Scrutiny
@@ -113,6 +167,7 @@ def dispatch_status_sms(app_record):
     - Mediation / Lok Adalat
     - Rejection
     Saves the notification text and sent timestamp into the database.
+    Attempts live telecom delivery via SMS gateway (Fast2SMS) if API key is provided.
     """
     name = app_record.applicant_name or "Applicant"
     app_no = app_record.application_number
@@ -155,6 +210,14 @@ def dispatch_status_sms(app_record):
     app_record.last_sms_notification = msg
     app_record.last_sms_sent_at = datetime.now(timezone.utc)
     logger.info(f"[SMS DISPATCH] Sent to {phone}: {msg}")
+
+    # Dispatch to live cellular gateway if key configured
+    sent, note = send_live_sms(phone, msg)
+    if sent:
+        logger.info(f"[GATEWAY DISPATCH] Live SMS successfully delivered to {phone}")
+    else:
+        logger.info(f"[IN-APP LOG] SMS notification queued ({note})")
+
     return msg
 
 # ============================================================================
@@ -402,6 +465,16 @@ def admin_update_application(app_id):
         flash(f"Application {app_record.application_number} updated & status SMS successfully dispatched to {app_record.phone} (Status: {app_record.status}).", "success")
     else:
         flash(f"Application {app_record.application_number} updated successfully.", "success")
+    return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/applications/clear-all", methods=["POST"])
+@login_required
+def admin_clear_all_applications():
+    """Removes all legal aid applications from the database."""
+    db = get_db()
+    count = db.query(LegalAidApplication).delete()
+    db.commit()
+    flash(f"All {count} legal aid applications have been successfully removed from the database.", "info")
     return redirect(url_for("admin_dashboard"))
 
 @app.route("/admin/plvs")
